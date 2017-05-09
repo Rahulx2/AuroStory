@@ -12,7 +12,7 @@ import client.MapleInventoryType;
 import client.MapleStat;
 import client.SkillFactory;
 import java.io.File;
-import net.channel.ChannelServer;
+import handling.channel.ChannelServer;
 import scripting.npc.NPCScriptManager;
 import server.MapleShopFactory;
 import tools.MaplePacketCreator;

@@ -25,7 +25,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 import client.MapleCharacter;
 import java.util.ArrayList;
-import net.world.remote.WorldChannelInterface;
+import handling.mundo.remote.WorldChannelInterface;
 import server.TimerManager;
 import tools.MaplePacketCreator;
 

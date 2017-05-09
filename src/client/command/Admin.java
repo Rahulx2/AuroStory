@@ -27,7 +27,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map.Entry;
-import net.channel.ChannelServer;
+import handling.channel.ChannelServer;
 import tools.DatabaseConnection;
 import server.life.MapleMonster;
 import server.MapleOxQuiz;

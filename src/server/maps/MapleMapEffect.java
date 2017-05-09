@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package server.maps;
 
 import client.MapleClient;
-import net.MaplePacket;
+import handling.MaplePacket;
 import tools.MaplePacketCreator;
 
 public class MapleMapEffect {

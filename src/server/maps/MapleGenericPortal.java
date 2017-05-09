@@ -24,7 +24,7 @@ package server.maps;
 import client.MapleCharacter;
 import java.awt.Point;
 import client.MapleClient;
-import net.world.MaplePartyCharacter;
+import handling.mundo.MaplePartyCharacter;
 import scripting.portal.PortalScriptManager;
 import server.MaplePortal;
 import tools.MaplePacketCreator;

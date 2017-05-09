@@ -42,6 +42,7 @@ public class Server {
     // Channel Configuration
     public static String SERVER_MESSAGE = "";
     public static final String EVENTS = "OmegaPQ TTPQ automsg"; //automsg KerningPQ Boats Subway OmegaPQ TTPQ
+    public static boolean Java8 = true;
     
     // IP Configuration
     public static String HOST = "127.0.0.1"; //217.23.15.242 -dedi //89.46.37.163 -vps //62.30.71.63 -home
@@ -53,4 +54,5 @@ public class Server {
     public static String url = "jdbc:mysql://localhost:3306/MapleStory?autoReconnect=true";
     public static String user = "root";
     public static String password = "";
+    
 }

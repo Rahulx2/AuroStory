@@ -39,7 +39,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import Config.Inventory;
 import tools.Randomizer;
-import net.channel.handler.FishingHandler.MapleFish;
+import handling.channel.handler.FishingHandler.MapleFish;
 import provider.MapleData;
 import provider.MapleDataDirectoryEntry;
 import provider.MapleDataFileEntry;

@@ -65,7 +65,7 @@ import constants.skills.DragonKnight;
 import constants.skills.FPArchMage;
 import constants.skills.FPMage;
 import constants.skills.FPWizard;
-import net.channel.ChannelServer;
+import handling.channel.ChannelServer;
 import provider.MapleData;
 import provider.MapleDataTool;
 import server.life.MapleMonster;
@@ -76,7 +76,7 @@ import server.maps.MapleMapObjectType;
 import server.maps.MapleMist;
 import server.maps.MapleSummon;
 import server.maps.SummonMovementType;
-import net.world.PlayerCoolDownValueHolder;
+import handling.mundo.PlayerCoolDownValueHolder;
 import tools.ArrayMap;
 import tools.MaplePacketCreator;
 import tools.Pair;
@@ -110,7 +110,7 @@ import constants.skills.SuperGM;
 import constants.skills.ThunderBreaker;
 import constants.skills.WhiteKnight;
 import constants.skills.WindArcher;
-import net.MaplePacket;
+import handling.MaplePacket;
 import server.maps.FieldLimit;
 
 /**

@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package tools;
 
+import Config.Game;
 import java.awt.Point;
 import java.net.InetAddress;
 import java.sql.ResultSet;
@@ -66,19 +67,20 @@ import java.util.Map.Entry;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.LinkedList;
-import net.LongValueHolder;
-import net.MaplePacket;
-import net.SendPacketOpcode;
-import net.channel.handler.SummonDamageHandler.SummonAttackEntry;
-import net.channel.handler.PlayerInteractionHandler;
-import net.world.MapleParty;
-import net.world.MaplePartyCharacter;
-import net.world.PartyOperation;
-import net.world.PlayerCoolDownValueHolder;
-import net.world.guild.MapleAlliance;
-import net.world.guild.MapleGuild;
-import net.world.guild.MapleGuildCharacter;
-import net.world.guild.MapleGuildSummary;
+import handling.LongValueHolder;
+import handling.MaplePacket;
+import handling.SendPacketOpcode;
+import handling.channel.handler.SummonDamageHandler.SummonAttackEntry;
+import handling.channel.handler.PlayerInteractionHandler;
+import handling.login.Balloon;
+import handling.mundo.MapleParty;
+import handling.mundo.MaplePartyCharacter;
+import handling.mundo.PartyOperation;
+import handling.mundo.PlayerCoolDownValueHolder;
+import handling.mundo.guild.MapleAlliance;
+import handling.mundo.guild.MapleGuild;
+import handling.mundo.guild.MapleGuildCharacter;
+import handling.mundo.guild.MapleGuildSummary;
 import server.CashItemInfo;
 import server.DueyPackages;
 import server.MTSItemInfo;
@@ -722,8 +724,13 @@ public class MaplePacketCreator {
             mplew.write(serverId);
             mplew.writeShort(i - 1);
         }
-        mplew.writeShort(0);
-        return mplew.getPacket();
+        mplew.writeShort(Game.getBalloons().size());
+        for (Balloon balloon : Game.getBalloons()) {
+            mplew.writeShort(balloon.nX);
+            mplew.writeShort(balloon.nY);
+            mplew.writeMapleAsciiString(balloon.sMessage);
+        }
+        return mplew.getPacket(); 
     }
 
     public static MaplePacket enableRecommendedServers() {
@@ -3119,6 +3126,24 @@ public class MaplePacketCreator {
         }
         return false;
     }
+    
+    // Usage: user.sendPacket(MaplePacketCreator.PlaySoundWithMuteBGM("Bgm00/FloralLife")); 
+    public static MaplePacket PlaySoundWithMuteBGM(String bgm) { 
+        final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter(); 
+        mplew.writeShort(SendPacketOpcode.SHOW_ITEM_GAIN_INCHAT.getValue()); 
+        mplew.write(0x19); 
+        mplew.writeMapleAsciiString(bgm); 
+        return mplew.getPacket(); 
+    } 
+
+    public static MaplePacket PlaySoundWithMuteBGM(int cid, String bgm) { 
+        final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter(); 
+        mplew.writeShort(SendPacketOpcode.SHOW_FOREIGN_EFFECT.getValue()); 
+        mplew.writeInt(cid); 
+        mplew.write(0x19); 
+        mplew.writeMapleAsciiString(bgm); 
+        return mplew.getPacket(); 
+    }  
 
     public static MaplePacket cancelBuff(List<MapleBuffStat> statups) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
@@ -3168,6 +3193,25 @@ public class MaplePacketCreator {
         mplew.writeMapleAsciiString(c.getName());
         return mplew.getPacket();
     }
+    
+    public static MaplePacket spawnKite(int oid, int itemid, String name, String msg, Point pos, int ft) {
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+        mplew.writeShort(SendPacketOpcode.SPAWN_KITE.getValue());
+        mplew.writeInt(oid);
+        mplew.writeInt(itemid);
+        mplew.writeMapleAsciiString(msg);
+        mplew.writeMapleAsciiString(name);
+        mplew.writeShort(pos.x);
+        mplew.writeShort(ft);
+        return mplew.getPacket();
+    }
+
+    public static MaplePacket removeKite(int oid) {
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+        mplew.writeShort(SendPacketOpcode.REMOVE_KITE.getValue());
+        mplew.writeInt(oid);
+        return mplew.getPacket();
+    }  
 
     public static MaplePacket getPlayerShopRemoveVisitor(int slot) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();

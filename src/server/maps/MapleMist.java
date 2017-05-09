@@ -31,7 +31,7 @@ import constants.skills.NightWalker;
 import constants.skills.Shadower;
 import java.awt.Point;
 import java.awt.Rectangle;
-import net.MaplePacket;
+import handling.MaplePacket;
 import server.MapleStatEffect;
 import server.life.MapleMonster;
 import server.life.MobSkill;

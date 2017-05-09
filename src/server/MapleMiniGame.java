@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import client.MapleCharacter;
 import client.MapleClient;
-import net.MaplePacket;
+import handling.MaplePacket;
 import server.maps.AbstractMapleMapObject;
 import server.maps.MapleMapObjectType;
 import tools.MaplePacketCreator;

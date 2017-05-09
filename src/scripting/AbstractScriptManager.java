@@ -21,12 +21,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package scripting;
 
+import Config.Server;
 import java.io.File;
 import java.io.FileReader;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import client.MapleClient;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.script.ScriptException;
+import tools.FilePrinter;
 
 /**
  *
@@ -57,6 +64,17 @@ public abstract class AbstractScriptManager {
                 if (c != null) {
                     c.setScriptEngine(path, engine);
                 }
+                try (Stream<String> stream = Files.lines(scriptFile.toPath())) { 
+                String lines = "load('nashorn:mozilla_compat.js');"; 
+                lines += stream.collect(Collectors.joining(System.lineSeparator())); 
+                engine.eval(lines); 
+            } catch (final ScriptException | IOException t) { 
+                if (Server.Java8) 
+                    FilePrinter.printError(FilePrinter.INVOCABLE + path.substring(12, path.length()), t, path); 
+                else  
+                    System.out.println(t); 
+                    return null; 
+            }  
                 FileReader fr = new FileReader(scriptFile);
                 engine.eval(fr);
                 fr.close();

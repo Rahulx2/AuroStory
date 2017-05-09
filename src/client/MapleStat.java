@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package client;
 
-import net.IntValueHolder;
+import handling.IntValueHolder;
 
 public enum MapleStat implements IntValueHolder {
 

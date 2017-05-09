@@ -53,9 +53,9 @@ import client.status.MonsterStatus;
 import client.status.MonsterStatusEffect;
 import Config.Inventory;
 import tools.Randomizer;
-import net.MaplePacket;
-import net.channel.ChannelServer;
-import net.world.MaplePartyCharacter;
+import handling.MaplePacket;
+import handling.channel.ChannelServer;
+import handling.mundo.MaplePartyCharacter;
 import scripting.map.MapScriptManager;
 import server.MapleItemInformationProvider;
 import server.MaplePortal;
@@ -868,7 +868,6 @@ public class MapleMap {
         mob.setPosition(spos);
         spawnMonster(mob);
     }
-//  public void spawnItemDrop(final int dropperId, final Point dropperPos, final MapleCharacter owner, final IItem item, Point pos, final boolean ffaDrop, final boolean expire) {
 
     private void monsterItemDrop(final MapleMonster m, final IItem item, long delay) {
         if (item.getItemId() == 4001101) { // moonbunny makes one instant it is spawned
@@ -891,6 +890,20 @@ public class MapleMap {
             monsterItemDrop.cancel(false);
         }
     }
+    
+    public void spawnKite(final MapleKite kite) {
+        addMapObject(kite);
+        broadcastMessage(kite.makeSpawnData());
+        TimerManager tMan = TimerManager.getInstance();
+        tMan.schedule(new Runnable() {
+
+            @Override
+            public void run() {
+                removeMapObject(kite);
+                broadcastMessage(kite.makeDestroyData());
+            }
+        }, 1000 * 60 * 60);
+    }  
 
     public void spawnFakeMonsterOnGroundBelow(MapleMonster mob, Point pos) {
         Point spos = getGroundBelow(pos);

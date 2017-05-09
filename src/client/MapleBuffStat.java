@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package client;
 
 import java.io.Serializable;
-import net.LongValueHolder;
+import handling.LongValueHolder;
 
 public enum MapleBuffStat implements LongValueHolder, Serializable {
 

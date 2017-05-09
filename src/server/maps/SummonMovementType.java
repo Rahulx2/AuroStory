@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package server.maps;
 
-import net.IntValueHolder;
+import handling.IntValueHolder;
 
 public enum SummonMovementType implements IntValueHolder {
 

@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package tools.data.output;
 
 import java.io.ByteArrayOutputStream;
-import net.ByteArrayMaplePacket;
-import net.MaplePacket;
+import handling.ByteArrayMaplePacket;
+import handling.MaplePacket;
 import tools.HexTool;
 
 /**

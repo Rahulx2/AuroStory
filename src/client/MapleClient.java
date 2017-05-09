@@ -44,14 +44,15 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 import javax.script.ScriptEngine;
+import handling.MaplePacket;
 import tools.DatabaseConnection;
-import net.channel.ChannelServer;
-import net.login.LoginServer;
-import net.world.MapleMessengerCharacter;
-import net.world.MaplePartyCharacter;
-import net.world.PartyOperation;
-import net.world.guild.MapleGuildCharacter;
-import net.world.remote.WorldChannelInterface;
+import handling.channel.ChannelServer;
+import handling.login.LoginServer;
+import handling.mundo.MapleMessengerCharacter;
+import handling.mundo.MaplePartyCharacter;
+import handling.mundo.PartyOperation;
+import handling.mundo.guild.MapleGuildCharacter;
+import handling.mundo.remote.WorldChannelInterface;
 import scripting.npc.NPCConversationManager;
 import scripting.npc.NPCScriptManager;
 import scripting.quest.QuestActionManager;
@@ -758,6 +759,10 @@ public class MapleClient {
 
     public QuestActionManager getQM() {
         return QuestScriptManager.getInstance().getQM(this);
+    }
+
+    public synchronized void announce(MaplePacket packet) {//MINA CORE IS A FUCKING BITCH AND I HATE IT <3
+        session.write(packet);
     }
 
     private static class CharNameAndId {

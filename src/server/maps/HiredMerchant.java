@@ -34,14 +34,14 @@ import client.MapleCharacter;
 import client.MapleClient;
 import java.sql.SQLException;
 import tools.DatabaseConnection;
-import net.MaplePacket;
+import handling.MaplePacket;
 import server.MapleInventoryManipulator;
 import server.MaplePlayerShopItem;
 import server.TimerManager;
 import tools.MaplePacketCreator;
 import tools.Pair;
 import client.MapleInventoryType;
-import net.channel.ChannelServer;
+import handling.channel.ChannelServer;
 
 /**
  *

@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package server;
 
 import java.rmi.RemoteException;
-import net.channel.ChannelServer;
+import handling.channel.ChannelServer;
 
 /**
  * @author Frz

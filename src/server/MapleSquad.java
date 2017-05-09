@@ -25,7 +25,7 @@ import client.MapleCharacter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
-import net.channel.ChannelServer;
+import handling.channel.ChannelServer;
 import server.maps.MapleMap;
 
 public final class MapleSquad {

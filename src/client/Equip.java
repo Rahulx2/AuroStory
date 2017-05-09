@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package client;
 
-import constants.ExpTable;
+import Config.Table.ExpTable;
 import java.util.LinkedList;
 import tools.MaplePacketCreator;
 import tools.Randomizer;
