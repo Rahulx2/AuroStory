@@ -1,0 +1,113 @@
+Comandos de Administrador:
+-!gc
+-!pmob
+-!npc
+-!pnpc
+-!saveall
+-!pinkbean
+-!playernpc
+-!reloadAllMaps
+-!setrates syntax: <EXP> <DROP> <BOSSDROP> <MESO>. If field is unneeded, put -1 so for example for just an EXP rate change: !setrates 50 -1 -1 -1. Negative numbers multiply base EXP rate so for 2x EXP do !setrates -2 -1 -1 -1.
+-!reloadmapspawns
+-!setgmlevel
+-!packet
+-!shutdown
+-!shutdownnow
+-!zakum
+
+Comandos de GameMaster (GM):
+
+-!ap
+-!clock
+-!clockd
+-!buffme
+-!chattype
+-!cody
+-!dispoNPCse
+-!mynpcpos
+-!fame
+-!giftnx
+-!gmshop
+-!heal
+-!id
+-!drop
+-!item
+-!job
+-!occupation
+-!kill
+-!level
+-!levelup
+-!maxstat
+-!maxskills
+-!mesos
+-!onlinechan
+-!pap
+-!pianus
+-!servermessage
+-!setall
+-!sp
+-!ban
+-!unban
+-!clearportalscripts
+-!clearmonsterdrops
+-!clearreactordrops
+-!clearshops
+-!clearevents
+-!reloadops
+-!horntail
+-!say
+-!notice - n - p - l - nv - v - b: Ejemplo !notice n - !notice p - !notice l - !notice nv - !notice v - !notice v - !notice b
+
+Comandos de VIP:
+
+-!ap
+-!chattype
+-!dc
+-!smegaoff
+-!smegaon
+-!id
+-!job
+-!killall
+-!level
+-!notice - m - c - w - nv
+-!me
+-!whosthere
+-!cheaters
+-!online
+-!search
+-!ban
+-!dc
+-!unban
+-!map
+-!charinfo
+-!warphere
+-!strike
+-!resetstrikes
+-!warp
+-!spawn - Syntex: !spawn [ID del Monsters] [Cuantos monsters] [HP - Vida del monsters] [EXP - Cuanto de experiencia dara] [PHP - Experiencia de vida para Pets] [PEXP - Experiencia para Pets] - Ejemplo: !spawn 100100 2 hp 1000000 exp 1000 php 100 pexp 100
+-!clearportalscripts
+-!clearmonsterdrops
+-!clearreactordrops
+-!clearshops
+-!clearevents
+-!reloadMap
+-!tempban - Syntax helper: !tempban <name> [i / m / w / d / h] <amount> [r [reason id]] : Text Reason.
+-!say
+-!giftpoints - Syntax helper: !giftpoints <name> <amount>
+-!reconnect
+-!reconnectchan
+-!closeallmerchants
+-!closemerchant - Syntax helper: !closemerchant <name>
+-!set - Syntax helper: !set <property> on / off
+-!warpmap
+
+Comandos de Jugadores:
+
+-@woof - Una cosa misteriosa
+-@meow  - Una cosa misteriosa
+-@save - Guarda las partidas
+-@spinel - Opens up Spinel from any location.
+-@anhero - Causes your character to die.
+-@shop - Opens up the basic shop.
+-@potshop - Opens up the potion shop.
+-@storage - Opens up your storage.
