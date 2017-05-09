@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package net.login.handler;
 
 import client.MapleClient;
-import Config.ServerConstants;
+import Config.Server;
 import net.AbstractMaplePacketHandler;
 import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -30,7 +30,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class AfterLoginHandler extends AbstractMaplePacketHandler {
 
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-        if (ServerConstants.DEBUG) {
+        if (Server.DEBUG) {
             c.getSession().write(MaplePacketCreator.pinOperation(0));
             return;
         }

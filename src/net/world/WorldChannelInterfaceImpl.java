@@ -40,7 +40,7 @@ import net.world.remote.WorldLocation;
 import net.world.remote.CheaterData;
 import java.util.Collections;
 import tools.CollectionUtil;
-import Config.ServerConstants;
+import Config.Server;
 import java.util.Properties;
 
 /**
@@ -139,19 +139,19 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             if (i < 0) {
                 if (i == 0) // exp
                 {
-                    outputs[i] = (int) Math.floor(ServerConstants.EXP_RATE * (inputs[i] * -1));
+                    outputs[i] = (int) Math.floor(Server.EXP_RATE * (inputs[i] * -1));
                 }
                 if (i == 2) // drop
                 {
-                    outputs[i] = (int) Math.floor(ServerConstants.DROP_RATE * (inputs[i] * -1));
+                    outputs[i] = (int) Math.floor(Server.DROP_RATE * (inputs[i] * -1));
                 }
                 if (i == 3) // bossdrop
                 {
-                    outputs[i] = (int) Math.floor(ServerConstants.BOSS_DROP_RATE * (inputs[i] * -1));
+                    outputs[i] = (int) Math.floor(Server.BOSS_DROP_RATE * (inputs[i] * -1));
                 }
                 if (i == 3) // meso
                 {
-                    outputs[i] = (int) Math.floor(ServerConstants.MESO_RATE * (inputs[i] * -1));
+                    outputs[i] = (int) Math.floor(Server.MESO_RATE * (inputs[i] * -1));
                 }
             } else {
                 outputs[i] = (int) Math.floor(inputs[i]);

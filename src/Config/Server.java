@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package Config;
 
-public class ServerConstants {
+public class Server {
     // Rate Configuration
 
     public static int EXP_RATE = 166;

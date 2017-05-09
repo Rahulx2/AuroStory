@@ -113,7 +113,7 @@ import tools.MaplePacketCreator;
 import tools.Pair;
 import tools.Randomizer;
 import client.anticheat.CheatTracker;
-import Config.ServerConstants;
+import Config.Server;
 import java.sql.Timestamp;
 
 public class MapleCharacter extends AbstractAnimatedMapleMapObject {
@@ -1905,51 +1905,51 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
     private static ChannelServer cserv;
 
     public int[] getOccupationRates() { // Edit to your likings...
-        int exprate = ServerConstants.EXP_RATE;
-        int mesorate = ServerConstants.MESO_RATE;
-        int droprate = ServerConstants.DROP_RATE;
+        int exprate = Server.EXP_RATE;
+        int mesorate = Server.MESO_RATE;
+        int droprate = Server.DROP_RATE;
         if (getOccupation().isA(MapleOccupations.Specialist)) {
-            exprate = ServerConstants.EXP_RATE * 2;
-            mesorate = ServerConstants.MESO_RATE * 2;
-            droprate = ServerConstants.DROP_RATE * 2;
+            exprate = Server.EXP_RATE * 2;
+            mesorate = Server.MESO_RATE * 2;
+            droprate = Server.DROP_RATE * 2;
         } else if (getOccupation().isA(MapleOccupations.BlackOp)) {
-            exprate = ServerConstants.EXP_RATE * 3;
-            mesorate = ServerConstants.MESO_RATE;
-            droprate = ServerConstants.DROP_RATE;
+            exprate = Server.EXP_RATE * 3;
+            mesorate = Server.MESO_RATE;
+            droprate = Server.DROP_RATE;
         } else if (getOccupation().isA(MapleOccupations.Sinner)) {
-            exprate = ServerConstants.EXP_RATE;
-            mesorate = ServerConstants.MESO_RATE * 2;
-            droprate = ServerConstants.DROP_RATE * 4;
+            exprate = Server.EXP_RATE;
+            mesorate = Server.MESO_RATE * 2;
+            droprate = Server.DROP_RATE * 4;
         } else if (getOccupation().isA(MapleOccupations.Businessman)) {
-            exprate = ServerConstants.EXP_RATE;
-            mesorate = ServerConstants.MESO_RATE * 4;
-            droprate = ServerConstants.DROP_RATE * 2;
+            exprate = Server.EXP_RATE;
+            mesorate = Server.MESO_RATE * 4;
+            droprate = Server.DROP_RATE * 2;
         } else if (getOccupation().isA(MapleOccupations.GM)) {
             if (isGM()) {
-                exprate = ServerConstants.EXP_RATE * 100;
-                mesorate = ServerConstants.MESO_RATE * 100;
-                droprate = ServerConstants.DROP_RATE * 100;
+                exprate = Server.EXP_RATE * 100;
+                mesorate = Server.MESO_RATE * 100;
+                droprate = Server.DROP_RATE * 100;
             } else {
-                exprate = ServerConstants.EXP_RATE / 2;
-                mesorate = ServerConstants.MESO_RATE / 2;
-                droprate = ServerConstants.DROP_RATE / 2;
+                exprate = Server.EXP_RATE / 2;
+                mesorate = Server.MESO_RATE / 2;
+                droprate = Server.DROP_RATE / 2;
             }
         } else if (getOccupation().isA(MapleOccupations.Sacrificer)) {
-            exprate = ServerConstants.EXP_RATE / 2;
-            mesorate = ServerConstants.MESO_RATE * 6;
-            droprate = ServerConstants.DROP_RATE * 4;
+            exprate = Server.EXP_RATE / 2;
+            mesorate = Server.MESO_RATE * 6;
+            droprate = Server.DROP_RATE * 4;
         } else if (getOccupation().isA(MapleOccupations.Grim)) {
-            exprate = ServerConstants.EXP_RATE;
-            mesorate = ServerConstants.MESO_RATE * 2;
-            droprate = ServerConstants.DROP_RATE;
+            exprate = Server.EXP_RATE;
+            mesorate = Server.MESO_RATE * 2;
+            droprate = Server.DROP_RATE;
         } else if (getOccupation().isA(MapleOccupations.NOJOB)) {
-            exprate = ServerConstants.EXP_RATE;
-            mesorate = ServerConstants.MESO_RATE;
-            droprate = ServerConstants.DROP_RATE;
+            exprate = Server.EXP_RATE;
+            mesorate = Server.MESO_RATE;
+            droprate = Server.DROP_RATE;
         } else {
-            exprate = ServerConstants.EXP_RATE;
-            mesorate = ServerConstants.MESO_RATE;
-            droprate = ServerConstants.DROP_RATE;
+            exprate = Server.EXP_RATE;
+            mesorate = Server.MESO_RATE;
+            droprate = Server.DROP_RATE;
         }
         return new int[]{exprate, mesorate, droprate};
     }

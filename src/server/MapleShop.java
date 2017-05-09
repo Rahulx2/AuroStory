@@ -34,7 +34,7 @@ import client.Item;
 import client.MapleClient;
 import client.MapleInventoryType;
 import client.MaplePet;
-import constants.InventoryConstants;
+import Config.Inventory;
 import tools.DatabaseConnection;
 import tools.MaplePacketCreator;
 
@@ -89,7 +89,7 @@ public class MapleShop {
                     return;
                 }
                 if (MapleInventoryManipulator.checkSpace(c, itemId, quantity, "")) {
-                    if (!InventoryConstants.isRechargable(itemId)) {
+                    if (!Inventory.isRechargable(itemId)) {
                         if (itemId >= 5000000 && itemId <= 5000100) {
                             int petId = MaplePet.createPet(itemId);
                             MapleInventoryManipulator.addById(c, itemId, quantity, null, petId);
@@ -137,7 +137,7 @@ public class MapleShop {
         }
         MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
         IItem item = c.getPlayer().getInventory(type).getItem(slot);
-        if (InventoryConstants.isRechargable(item.getItemId())) {
+        if (Inventory.isRechargable(item.getItemId())) {
             quantity = item.getQuantity();
         }
         if (quantity < 0) {
@@ -150,7 +150,7 @@ public class MapleShop {
         if (quantity <= iQuant && iQuant > 0) {
             MapleInventoryManipulator.removeFromSlot(c, type, slot, quantity, false);
             double price;
-            if (InventoryConstants.isRechargable(item.getItemId())) {
+            if (Inventory.isRechargable(item.getItemId())) {
                 price = ii.getWholePrice(item.getItemId()) / (double) ii.getSlotMax(c, item.getItemId());
             } else {
                 price = ii.getPrice(item.getItemId());
@@ -166,7 +166,7 @@ public class MapleShop {
     public void recharge(MapleClient c, byte slot) {
         MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
         IItem item = c.getPlayer().getInventory(MapleInventoryType.USE).getItem(slot);
-        if (item == null || !InventoryConstants.isRechargable(item.getItemId())) {
+        if (item == null || !Inventory.isRechargable(item.getItemId())) {
             return;
         }
         short slotMax = ii.getSlotMax(c, item.getItemId());
@@ -224,7 +224,7 @@ public class MapleShop {
             rs = ps.executeQuery();
             List<Integer> recharges = new ArrayList<Integer>(rechargeableItems);
             while (rs.next()) {
-                if (InventoryConstants.isRechargable(rs.getInt("itemid"))) {
+                if (Inventory.isRechargable(rs.getInt("itemid"))) {
                     MapleShopItem starItem = new MapleShopItem((short) 1, rs.getInt("itemid"), rs.getInt("price"));
                     ret.addItem(starItem);
                     if (rechargeableItems.contains(starItem.getItemId())) {

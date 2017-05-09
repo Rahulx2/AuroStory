@@ -31,7 +31,7 @@ import client.MapleInventory;
 import client.MapleInventoryType;
 import client.MaplePet;
 import client.MapleQuestStatus;
-import constants.InventoryConstants;
+import Config.Inventory;
 import java.rmi.RemoteException;
 import net.world.MapleParty;
 import net.world.MaplePartyCharacter;
@@ -127,7 +127,7 @@ public class AbstractPlayerInteraction {
                 c.getPlayer().dropMessage(1, "Your inventory is full. Please remove an item from your " + ii.getInventoryType(id).name() + " inventory.");
                 return;
             }
-            if (ii.getInventoryType(id).equals(MapleInventoryType.EQUIP) && !InventoryConstants.isRechargable(item.getItemId())) {
+            if (ii.getInventoryType(id).equals(MapleInventoryType.EQUIP) && !Inventory.isRechargable(item.getItemId())) {
                 if (randomStats) {
                     MapleInventoryManipulator.addFromDrop(c, ii.randomizeStats((Equip) item), false);
                 } else {

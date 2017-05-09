@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package net;
 
 import client.MapleClient;
-import Config.ServerConstants;
+import Config.Server;
 import net.channel.ChannelServer;
 import tools.MapleAESOFB;
 import tools.MaplePacketCreator;
@@ -89,7 +89,7 @@ public class MapleServerHandler extends IoHandlerAdapter {
         MapleAESOFB recvCypher = new MapleAESOFB(key, ivRecv, (short) 83);
         MapleClient client = new MapleClient(sendCypher, recvCypher, session);
         client.setChannel(channel);
-        session.write(MaplePacketCreator.getHello((short) 83, ivSend, ivRecv, ServerConstants.IS_TEST));
+        session.write(MaplePacketCreator.getHello((short) 83, ivSend, ivRecv, Server.IS_TEST));
         session.setAttribute(MapleClient.CLIENT_KEY, client);
     }
 
@@ -118,7 +118,7 @@ public class MapleServerHandler extends IoHandlerAdapter {
                 packetHandler.handlePacket(slea, client);
             } catch (Throwable t) {
             }
-        } else if (packetHandler == null && ServerConstants.DEBUG) {
+        } else if (packetHandler == null && Server.DEBUG) {
             System.out.println(slea);
         }
     }

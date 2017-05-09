@@ -38,7 +38,7 @@ import javax.management.InstanceAlreadyExistsException;
 import javax.management.MalformedObjectNameException;
 import javax.rmi.ssl.SslRMIClientSocketFactory;
 import client.MapleCharacter;
-import Config.ServerConstants;
+import Config.Server;
 import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -100,10 +100,10 @@ public class ChannelServer implements Runnable {
     private int instanceId = 0;
     private Map<MapleSquadType, MapleSquad> mapleSquads = new HashMap<MapleSquadType, MapleSquad>();
     private static int world = 0;
-    private int EXP_RATE = ServerConstants.EXP_RATE;
-    private int DROP_RATE = ServerConstants.DROP_RATE;
-    private int BOSS_DROP_RATE = ServerConstants.BOSS_DROP_RATE;
-    private int MESO_RATE = ServerConstants.MESO_RATE;
+    private int EXP_RATE = Server.EXP_RATE;
+    private int DROP_RATE = Server.DROP_RATE;
+    private int BOSS_DROP_RATE = Server.BOSS_DROP_RATE;
+    private int MESO_RATE = Server.MESO_RATE;
     private HiredMerchantRegistry HMRegistry = new HiredMerchantRegistry(channel);
 
     private ChannelServer(String key) {
@@ -145,7 +145,7 @@ public class ChannelServer implements Runnable {
                 System.out.println("Reconnecting to world server");
                 synchronized (wci) {
                     try {
-                        Registry registry = LocateRegistry.getRegistry(ServerConstants.HOST, Registry.REGISTRY_PORT, new SslRMIClientSocketFactory());
+                        Registry registry = LocateRegistry.getRegistry(Server.HOST, Registry.REGISTRY_PORT, new SslRMIClientSocketFactory());
                         worldRegistry = (WorldRegistry) registry.lookup("WorldRegistry");
                         cwi = new ChannelWorldInterfaceImpl(this, world);
                         wci = worldRegistry.registerChannelServer(key, cwi, world);
@@ -172,7 +172,7 @@ public class ChannelServer implements Runnable {
         try {
             cwi = new ChannelWorldInterfaceImpl(this, world);
             wci = worldRegistry.registerChannelServer(key, cwi, world);
-            eventSM = new EventScriptManager(this, ServerConstants.EVENTS.split(" "));
+            eventSM = new EventScriptManager(this, Server.EVENTS.split(" "));
             Properties dbProp = new Properties();
             FileReader fileReader = new FileReader("db.properties");
             dbProp.load(fileReader);
@@ -186,7 +186,7 @@ public class ChannelServer implements Runnable {
             ps.executeUpdate();
             ps.close();
             port = 7575 + this.channel - 1;
-            ip = ServerConstants.HOST + ":" + port;
+            ip = Server.HOST + ":" + port;
             IoBuffer.setUseDirectBuffer(false);
             IoBuffer.setAllocator(new SimpleBufferAllocator());
             acceptor = new NioSocketAcceptor();
@@ -260,7 +260,7 @@ public class ChannelServer implements Runnable {
 
     public void addPlayer(MapleCharacter chr) {
         players.registerPlayer(chr);
-        chr.getClient().getSession().write(MaplePacketCreator.serverMessage(ServerConstants.SERVER_MESSAGE));
+        chr.getClient().getSession().write(MaplePacketCreator.serverMessage(Server.SERVER_MESSAGE));
     }
 
     public IPlayerStorage getPlayerStorage() {
@@ -277,8 +277,8 @@ public class ChannelServer implements Runnable {
     }
 
     public void setServerMessage(String newMessage) {
-        ServerConstants.SERVER_MESSAGE = newMessage;
-        broadcastPacket(MaplePacketCreator.serverMessage(ServerConstants.SERVER_MESSAGE));
+        Server.SERVER_MESSAGE = newMessage;
+        broadcastPacket(MaplePacketCreator.serverMessage(Server.SERVER_MESSAGE));
     }
 
     public void broadcastPacket(MaplePacket data) {
@@ -404,7 +404,7 @@ public class ChannelServer implements Runnable {
         ServerMode.setServerMode(Mode.CHANNEL);
         Registry registry = LocateRegistry.getRegistry("localhost", Registry.REGISTRY_PORT, new SslRMIClientSocketFactory());
         worldRegistry = (WorldRegistry) registry.lookup("WorldRegistry");
-        for (int i = 0; i < ServerConstants.CHANNEL_NUMBER; i++) {
+        for (int i = 0; i < Server.CHANNEL_NUMBER; i++) {
             newInstance("release" + (i + 1)).run();
         }
         DatabaseConnection.getConnection();
@@ -507,7 +507,7 @@ public class ChannelServer implements Runnable {
 
     public void reloadEvents() {
         eventSM.cancel();
-        eventSM = new EventScriptManager(this, ServerConstants.EVENTS.split(" "));
+        eventSM = new EventScriptManager(this, Server.EVENTS.split(" "));
         eventSM.init();
     }
 

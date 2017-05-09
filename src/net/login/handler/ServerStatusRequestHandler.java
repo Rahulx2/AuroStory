@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package net.login.handler;
 
 import client.MapleClient;
-import Config.ServerConstants;
+import Config.Server;
 import java.rmi.RemoteException;
 import net.AbstractMaplePacketHandler;
 import net.login.LoginServer;
@@ -42,9 +42,9 @@ public final class ServerStatusRequestHandler extends AbstractMaplePacketHandler
         } catch (RemoteException re) {
             System.out.println("Failed to get channel load.");
         }
-        if (num >= ServerConstants.CHANNEL_LOAD) {
+        if (num >= Server.CHANNEL_LOAD) {
             status = 2;
-        } else if (num >= ServerConstants.CHANNEL_LOAD * .8) { // More than 80 percent o___o
+        } else if (num >= Server.CHANNEL_LOAD * .8) { // More than 80 percent o___o
             status = 1;
         } else {
             status = 0;

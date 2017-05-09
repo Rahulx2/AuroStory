@@ -28,7 +28,7 @@ import java.util.Map;
 import client.IItem;
 import client.MapleCharacter;
 import client.MapleInventoryType;
-import constants.InventoryConstants;
+import Config.Inventory;
 import java.util.ArrayList;
 import tools.MaplePacketCreator;
 
@@ -84,8 +84,8 @@ public class MapleTrade {
         items.clear();
         meso = 0;
         for (IItem item : exchangeItems) {
-            if ((item.getFlag() & InventoryConstants.KARMA) == InventoryConstants.KARMA) {
-                item.setFlag((byte) (item.getFlag() ^ InventoryConstants.KARMA)); //items with scissors of karma used on them are reset once traded
+            if ((item.getFlag() & Inventory.KARMA) == Inventory.KARMA) {
+                item.setFlag((byte) (item.getFlag() ^ Inventory.KARMA)); //items with scissors of karma used on them are reset once traded
             }
             MapleInventoryManipulator.addFromDrop(chr.getClient(), item, true);
         }

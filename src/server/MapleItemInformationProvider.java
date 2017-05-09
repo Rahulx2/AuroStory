@@ -37,7 +37,7 @@ import client.SkillFactory;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import constants.InventoryConstants;
+import Config.Inventory;
 import tools.Randomizer;
 import net.channel.handler.FishingHandler.MapleFish;
 import provider.MapleData;
@@ -294,18 +294,18 @@ public class MapleItemInformationProvider {
                     ret = 100;
                 }
             } else {
-                if (InventoryConstants.isRechargable(itemId) || (MapleDataTool.getInt(smEntry) == 0)) {
+                if (Inventory.isRechargable(itemId) || (MapleDataTool.getInt(smEntry) == 0)) {
                     ret = 1;
                 }
                 ret = (short) MapleDataTool.getInt(smEntry);
-                if (InventoryConstants.isThrowingStar(itemId)) {
+                if (Inventory.isThrowingStar(itemId)) {
                     ret += c.getPlayer().getSkillLevel(SkillFactory.getSkill(4100000)) * 10;
                 } else {
                     ret += c.getPlayer().getSkillLevel(SkillFactory.getSkill(5200000)) * 10;
                 }
             }
         }
-        if (!InventoryConstants.isRechargable(itemId)) {
+        if (!Inventory.isRechargable(itemId)) {
             slotMaxCache.put(itemId, ret);
         }
         return ret;
@@ -436,11 +436,11 @@ public class MapleItemInformationProvider {
                 short flag = nEquip.getFlag();
                 switch (scrollId) {
                     case 2040727:
-                        flag |= InventoryConstants.SPIKES;
+                        flag |= Inventory.SPIKES;
                         nEquip.setFlag((byte) flag);
                         return equip;
                     case 2041058:
-                        flag |= InventoryConstants.COLD;
+                        flag |= Inventory.COLD;
                         nEquip.setFlag((byte) flag);
                         return equip;
                     case 2049000:
@@ -597,11 +597,11 @@ public class MapleItemInformationProvider {
                     nEquip.setUpgradeSlots((byte) stat.getValue().intValue());
                 } else if (isDropRestricted(equipId)) {
                     byte flag = nEquip.getFlag();
-                    flag |= InventoryConstants.UNTRADEABLE;
+                    flag |= Inventory.UNTRADEABLE;
                     nEquip.setFlag(flag);
                 } else if (stats.get("fs") > 0) {
                     byte flag = nEquip.getFlag();
-                    flag |= InventoryConstants.SPIKES;
+                    flag |= Inventory.SPIKES;
                     nEquip.setFlag(flag);
                     equipCache.put(equipId, nEquip);
                 }

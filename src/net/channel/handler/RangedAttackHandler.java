@@ -31,7 +31,7 @@ import client.MapleInventory;
 import client.MapleInventoryType;
 import client.MapleWeaponType;
 import client.SkillFactory;
-import constants.InventoryConstants;
+import Config.Inventory;
 import constants.skills.Buccaneer;
 import constants.skills.NightWalker;
 import constants.skills.WindArcher;
@@ -77,16 +77,16 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
                 IItem item = player.getInventory(MapleInventoryType.USE).getItem((byte) i);
                 if (item != null) {
                     int id = item.getItemId();
-                    boolean bow = InventoryConstants.isArrowForBow(id);
-                    boolean cbow = InventoryConstants.isArrowForCrossBow(id);
+                    boolean bow = Inventory.isArrowForBow(id);
+                    boolean cbow = Inventory.isArrowForCrossBow(id);
                     if (item.getQuantity() > bulletCount) {
-                        if (type == MapleWeaponType.CLAW && InventoryConstants.isThrowingStar(id) && weapon.getItemId() != 1472063) {
+                        if (type == MapleWeaponType.CLAW && Inventory.isThrowingStar(id) && weapon.getItemId() != 1472063) {
                             if (((id == 2070007 || id == 2070018) && player.getLevel() < 70) || (id == 2070016 && player.getLevel() < 50)) {
                             } else {
                                 projectile = id;
                                 break;
                             }
-                        } else if ((type == MapleWeaponType.GUN && InventoryConstants.isBullet(id))) {
+                        } else if ((type == MapleWeaponType.GUN && Inventory.isBullet(id))) {
                             if (id == 2331000 && id == 2332000) {
                                 if (player.getLevel() > 69) {
                                     projectile = id;
@@ -114,7 +114,7 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
             }
             if (projectile != 0 || soulArrow || attack.skill == 11101004 || attack.skill == 15111007 || attack.skill == 14101006) {
                 int visProjectile = projectile; //visible projectile sent to players
-                if (InventoryConstants.isThrowingStar(projectile)) {
+                if (Inventory.isThrowingStar(projectile)) {
                     MapleInventory cash = player.getInventory(MapleInventoryType.CASH);
                     for (int i = 0; i < 100; i++) { // impose order...
                         IItem item = cash.getItem((byte) i);

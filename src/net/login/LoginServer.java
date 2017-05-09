@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package net.login;
 
-import Config.ServerConstants;
+import Config.Server;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -97,7 +97,7 @@ public class LoginServer implements Runnable {
         acceptor.getFilterChain().addLast("codec", (IoFilter) new ProtocolCodecFilter(new MapleCodecFactory()));
         TimerManager tMan = TimerManager.getInstance();
         tMan.start();
-        tMan.register(new RankingWorker(), ServerConstants.RANKING_INTERVAL);
+        tMan.register(new RankingWorker(), Server.RANKING_INTERVAL);
         MapleServerHandler handler = new MapleServerHandler(PacketProcessor.getProcessor(PacketProcessor.Mode.LOGINSERVER));
         acceptor.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, 30);
         acceptor.setHandler(handler);

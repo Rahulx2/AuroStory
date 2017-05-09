@@ -30,8 +30,8 @@ import client.MapleJob;
 import client.MapleQuestStatus;
 import client.MapleStat;
 import client.SkillFactory;
-import constants.InventoryConstants;
-import Config.ServerConstants;
+import Config.Inventory;
+import Config.Server;
 import provider.MapleData;
 import provider.MapleDataTool;
 import server.MapleInventoryManipulator;
@@ -95,7 +95,7 @@ public class MapleQuestAction {
                 if (status.getStatus() == MapleQuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
                     break;
                 }
-                c.gainExp((MapleDataTool.getInt(data) * ServerConstants.EXP_RATE), true, true);
+                c.gainExp((MapleDataTool.getInt(data) * Server.EXP_RATE), true, true);
                 break;
             case ITEM:
                 MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
@@ -214,7 +214,7 @@ public class MapleQuestAction {
                     break;
                 }
                 int flag = MapleDataTool.getInt("petskill", data);
-                c.getPet(0).setFlag((byte) (c.getPet(0).getFlag() | InventoryConstants.getFlagByInt(flag)));
+                c.getPet(0).setFlag((byte) (c.getPet(0).getFlag() | Inventory.getFlagByInt(flag)));
                 break;
             default:
         }

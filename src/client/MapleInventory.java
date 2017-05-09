@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package client;
 
-import constants.InventoryConstants;
+import Config.Inventory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -136,7 +136,7 @@ public class MapleInventory implements Iterable<IItem> {
             source.setPosition(dSlot);
             inventory.put(dSlot, source);
             inventory.remove(sSlot);
-        } else if (target.getItemId() == source.getItemId() && !InventoryConstants.isRechargable(source.getItemId())) {
+        } else if (target.getItemId() == source.getItemId() && !Inventory.isRechargable(source.getItemId())) {
             if (type.getType() == MapleInventoryType.EQUIP.getType()) {
                 swap(target, source);
             }

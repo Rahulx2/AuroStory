@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package net.world;
 
-import Config.ServerConstants;
+import Config.Server;
 import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -94,7 +94,7 @@ public class WorldRegistryImpl extends UnicastRemoteObject implements WorldRegis
         if (instance == null) {
             try {
                 instance = new WorldRegistryImpl();
-                for (int i = 0; i < ServerConstants.NUM_WORLDS; i++) {
+                for (int i = 0; i < Server.NUM_WORLDS; i++) {
                     worldchannelserver.put(i, new LinkedHashMap<Integer, ChannelWorldInterface>());
                 }
             } catch (RemoteException e) {

@@ -53,8 +53,8 @@ import client.MapleRing;
 import client.MapleStat;
 import client.SkillMacro;
 import client.status.MonsterStatus;
-import constants.InventoryConstants;
-import Config.ServerConstants;
+import Config.Inventory;
+import Config.Server;
 import constants.skills.Buccaneer;
 import constants.skills.Marauder;
 import constants.skills.ThunderBreaker;
@@ -378,7 +378,7 @@ public class MaplePacketCreator {
             mplew.writeShort(item.getQuantity());
             mplew.writeMapleAsciiString(item.getOwner());
             mplew.writeShort(item.getFlag());
-            if (InventoryConstants.isRechargable(item.getItemId())) {
+            if (Inventory.isRechargable(item.getItemId())) {
                 mplew.write(HexTool.getByteArrayFromHexString("02 00 00 00 54 00 00 34"));
             }
         }
@@ -693,8 +693,8 @@ public class MaplePacketCreator {
         mplew.writeShort(SendPacketOpcode.SERVERLIST.getValue());
         mplew.write(serverId);
         mplew.writeMapleAsciiString(serverName);
-        mplew.write(ServerConstants.FLAG);
-        mplew.writeMapleAsciiString(ServerConstants.EVENT_MESSAGE);
+        mplew.write(Server.FLAG);
+        mplew.writeMapleAsciiString(Server.EVENT_MESSAGE);
         mplew.write(0x64); // rate modifier, don't ask O.O!
         mplew.write(0x0); // event xp * 2.6 O.O!
         mplew.write(0x64); // rate modifier, don't ask O.O!
@@ -712,9 +712,9 @@ public class MaplePacketCreator {
         int load;
         for (int i = 1; i <= lastChannel; i++) {
             if (channels.contains(i)) {
-                load = channelLoad.get(i) * 1200 / ServerConstants.CHANNEL_LOAD;
+                load = channelLoad.get(i) * 1200 / Server.CHANNEL_LOAD;
             } else {
-                load = ServerConstants.CHANNEL_LOAD; // full
+                load = Server.CHANNEL_LOAD; // full
             }
             mplew.writeMapleAsciiString(serverName + "-" + i);
             mplew.writeInt(load);
@@ -2359,7 +2359,7 @@ public class MaplePacketCreator {
             mplew.writeLong(0);
             mplew.writeInt(0);
 
-            if (!InventoryConstants.isRechargable(item.getItemId())) {
+            if (!Inventory.isRechargable(item.getItemId())) {
                 mplew.writeShort(1); // stacksize o.o
                 mplew.writeShort(item.getBuyable());
             } else {

@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package net.login.handler;
 
 import client.MapleClient;
-import Config.ServerConstants;
+import Config.Server;
 import java.rmi.RemoteException;
 import net.AbstractMaplePacketHandler;
 import net.login.LoginServer;
@@ -34,7 +34,7 @@ public final class ServerlistRequestHandler extends AbstractMaplePacketHandler {
     private static final String[] names = {"Scania", "Bera", "Broa", "Windia", "Khaini", "Bellocan", "Mardia", "Kradia", "Yellonde", "Demethos", "Elnido", "Kastia", "Judis", "Arkenia", "Plana", "Galicia", "Kalluna", "Stius", "Croa", "Zenith", "Medere"};
 
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-        for (int i = 0; i < ServerConstants.NUM_WORLDS; i++) {//input world numbers here change 1 to number of worlds
+        for (int i = 0; i < Server.NUM_WORLDS; i++) {//input world numbers here change 1 to number of worlds
             try {
                 c.getSession().write(MaplePacketCreator.getServerList(i, names[i], LoginServer.getInstance().getWorldInterface().getChannelLoad(i)));
             } catch (RemoteException e) {

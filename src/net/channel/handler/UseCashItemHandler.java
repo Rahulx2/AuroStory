@@ -35,7 +35,7 @@ import client.MapleJob;
 import client.MaplePet;
 import client.MapleStat;
 import client.SkillFactory;
-import constants.InventoryConstants;
+import Config.Inventory;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import net.AbstractMaplePacketHandler;
@@ -166,7 +166,7 @@ public final class UseCashItemHandler extends AbstractMaplePacketHandler {
                         return;
                     }
                     byte flag = item.getFlag();
-                    flag |= InventoryConstants.LOCK;
+                    flag |= Inventory.LOCK;
                     item.setFlag(flag);
                     c.getSession().write(MaplePacketCreator.updateItemInSlot(item));
                     remove(c, itemId);
@@ -420,11 +420,11 @@ public final class UseCashItemHandler extends AbstractMaplePacketHandler {
                 MapleInventoryType type = MapleInventoryType.getByType((byte) slea.readInt());
                 byte slot = (byte) slea.readInt();
                 IItem item = player.getInventory(type).getItem(slot);
-                if (item == null || item.getQuantity() <= 0 || (item.getFlag() & InventoryConstants.KARMA) > 0 && ii.isKarmaAble(item.getItemId())) {
+                if (item == null || item.getQuantity() <= 0 || (item.getFlag() & Inventory.KARMA) > 0 && ii.isKarmaAble(item.getItemId())) {
                     c.getSession().write(MaplePacketCreator.enableActions());
                     return;
                 }
-                item.setFlag((byte) InventoryConstants.KARMA);
+                item.setFlag((byte) Inventory.KARMA);
                 c.getSession().write(MaplePacketCreator.clearInventoryItem(type, item.getPosition(), false));
                 c.getSession().write(MaplePacketCreator.addInventorySlot(type, item, false));
                 remove(c, itemId);

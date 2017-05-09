@@ -30,7 +30,7 @@ import client.IItem;
 import client.Item;
 import client.MapleClient;
 import client.MapleInventoryType;
-import Config.ServerConstants;
+import Config.Server;
 import scripting.AbstractPlayerInteraction;
 import server.MapleItemInformationProvider;
 import server.life.MapleLifeFactory;
@@ -88,7 +88,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
             if (d.itemId == 0) {
                 int range = maxMeso - minMeso;
                 int displayDrop = (int) (Math.random() * range) + minMeso;
-                int mesoDrop = (displayDrop * ServerConstants.MESO_RATE);
+                int mesoDrop = (displayDrop * Server.MESO_RATE);
                 final int dropperId = reactor.getId();
                 final Point dropperPos = reactor.getPosition();
                 reactor.getMap().spawnMesoDrop(mesoDrop, displayDrop, dropPos, dropperId, dropperPos, getPlayer(), meso);

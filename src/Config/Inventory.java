@@ -19,13 +19,13 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package constants;
+package Config;
 
 /**
  *
  * @author Jay Estrella
  */
-public final class InventoryConstants {
+public final class Inventory {
 
     public final static int LOCK = 0x01;
     public final static int SPIKES = 0x02;

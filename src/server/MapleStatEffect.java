@@ -43,8 +43,8 @@ import client.MapleStat;
 import client.SkillFactory;
 import client.status.MonsterStatus;
 import client.status.MonsterStatusEffect;
-import constants.InventoryConstants;
-import Config.ServerConstants;
+import Config.Inventory;
+import Config.Server;
 import constants.skills.Assassin;
 import constants.skills.Aran;
 import constants.skills.Bandit;
@@ -169,7 +169,7 @@ public class MapleStatEffect implements Serializable {
         int iprop = MapleDataTool.getInt("prop", source, 100);
         ret.prop = iprop / 100.0;
         ret.mobCount = MapleDataTool.getInt("mobCount", source, 1);
-        if (ServerConstants.enableCooldowns) {
+        if (Server.enableCooldowns) {
             ret.cooldown = MapleDataTool.getInt("cooltime", source, 0);
         }
         ret.morphId = MapleDataTool.getInt("morph", source, 0);
@@ -652,7 +652,7 @@ public class MapleStatEffect implements Serializable {
             for (int i = 0; i < 97; i++) { // impose order...
                 IItem item = use.getItem((byte) i);
                 if (item != null) {
-                    if (InventoryConstants.isThrowingStar(item.getItemId()) && item.getQuantity() >= 200) {
+                    if (Inventory.isThrowingStar(item.getItemId()) && item.getQuantity() >= 200) {
                         projectile = item.getItemId();
                         break;
                     }

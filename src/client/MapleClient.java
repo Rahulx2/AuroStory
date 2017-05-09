@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package client;
 
-import Config.ServerConstants;
+import Config.Server;
 import java.rmi.RemoteException;
 import java.security.MessageDigest;
 import java.security.Timestamp;
@@ -712,7 +712,7 @@ public class MapleClient {
             @Override
             public void run() {
                 if (lastPong < then) {
-                    if (getSession().isConnected() && !ServerConstants.DEBUG) {
+                    if (getSession().isConnected() && !Server.DEBUG) {
                         getSession().close(true);
                     }
                     if (player != null) {
