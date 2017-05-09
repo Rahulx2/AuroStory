@@ -463,54 +463,10 @@ public class MapleClient {
         }
     }
 
-    /*public int getLoginState() {
-    try {
-    Connection con = DatabaseConnection.getConnection();
-    PreparedStatement ps = con.prepareStatement("SELECT loggedin, lastlogin, UNIX_TIMESTAMP(birthday) as birthday FROM accounts WHERE id = ?");
-    ps.setInt(1, getAccID());
-    ResultSet rs = ps.executeQuery();
-    if (!rs.next()) {
-    rs.close();
-    ps.close();
-    throw new RuntimeException("getLoginState - MapleClient");
-    }
-    birthday = Calendar.getInstance();
-    long blubb = rs.getLong("birthday");
-    if (blubb >= 0) {
-    birthday.setTimeInMillis(blubb * 1000);
-    }
-    int state = rs.getInt("loggedin");
-    if (state == LOGIN_SERVER_TRANSITION) {
-    if (rs.getTimestamp("lastlogin").getTime() + 30000 < System.currentTimeMillis()) {
-    state = LOGIN_NOTLOGGEDIN;
-    updateLoginState(LOGIN_NOTLOGGEDIN);
-    }
-    }
-    rs.close();
-    ps.close();
-    if (state == LOGIN_LOGGEDIN) {
-    loggedIn = true;
-    } else if (state == LOGIN_SERVER_TRANSITION) {
-    ps = con.prepareStatement("UPDATE accounts SET loggedin = 0 WHERE id = ?");
-    ps.setInt(1, getAccID());
-    ps.executeUpdate();
-    ps.close();
-    } else {
-    loggedIn = false;
-    }
-    return state;
-    } catch (SQLException e) {
-    loggedIn = false;
-    e.printStackTrace();
-    throw new RuntimeException("login state");
-    }
-    }*/
-    public int getLoginState() { // TODO hide?
+    public int getLoginState() {
         Connection con = DatabaseConnection.getConnection();
         try {
             PreparedStatement ps;
-            //"CAST(birthday AS CHAR) as birthday" instead of just "birthday" gives us a workaround for
-            //a java.sql.Date limitation for null/undefined (0000-00-00) date, since we need the null date for some checks.
             ps = con.prepareStatement("SELECT loggedin, lastlogin, CAST(birthday AS CHAR) as birthday FROM accounts WHERE id = ?");
             ps.setInt(1, getAccID());
             ResultSet rs = ps.executeQuery();
@@ -580,7 +536,6 @@ public class MapleClient {
                 MapleTrade.cancelTrade(player);
             }
             player.saveCooldowns();
-//            player.getFamily().setPlayer(null);
             MapleMiniGame game = player.getMiniGame();
             if (game != null) {
                 player.setMiniGame(null);
@@ -699,11 +654,6 @@ public class MapleClient {
                 }
             }
             rs.close();
-            /*    ps = con.prepareStatement("UPDATE characters set `deleted` = 1, `name` = ? WHERE id = ?");
-            ps.setString(1, "___" + charname);
-            ps.setInt(2, cid);
-            ps.executeUpdate();
-            ps.close();*/
             ps = con.prepareStatement("DELETE FROM characters WHERE id = ?");
             ps.setInt(1, cid);
             ps.executeUpdate();

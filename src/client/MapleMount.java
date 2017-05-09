@@ -98,11 +98,6 @@ public class MapleMount {
     }
 
     public void increaseTiredness() {
-        /*      this.tiredness++;
-        owner.getMap().broadcastMessage(MaplePacketCreator.updateMount(owner.getId(), this, false));
-        if (tiredness > 99) {
-        owner.dispelSkill(owner.getJobType() * 10000000 + 1004);*/
-        // }
     }
 
     public void setExp(int newexp) {
