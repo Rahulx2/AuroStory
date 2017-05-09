@@ -38,7 +38,7 @@ import javax.management.InstanceAlreadyExistsException;
 import javax.management.MalformedObjectNameException;
 import javax.rmi.ssl.SslRMIClientSocketFactory;
 import client.MapleCharacter;
-import constants.ServerConstants;
+import Config.ServerConstants;
 import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package net.login;
 
-import constants.ServerConstants;
+import Config.ServerConstants;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetSocketAddress;

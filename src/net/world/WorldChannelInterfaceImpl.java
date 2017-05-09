@@ -40,7 +40,7 @@ import net.world.remote.WorldLocation;
 import net.world.remote.CheaterData;
 import java.util.Collections;
 import tools.CollectionUtil;
-import constants.ServerConstants;
+import Config.ServerConstants;
 import java.util.Properties;
 
 /**

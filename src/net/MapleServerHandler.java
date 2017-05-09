@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package net;
 
 import client.MapleClient;
-import constants.ServerConstants;
+import Config.ServerConstants;
 import net.channel.ChannelServer;
 import tools.MapleAESOFB;
 import tools.MaplePacketCreator;

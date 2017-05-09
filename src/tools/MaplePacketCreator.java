@@ -54,7 +54,7 @@ import client.MapleStat;
 import client.SkillMacro;
 import client.status.MonsterStatus;
 import constants.InventoryConstants;
-import constants.ServerConstants;
+import Config.ServerConstants;
 import constants.skills.Buccaneer;
 import constants.skills.Marauder;
 import constants.skills.ThunderBreaker;

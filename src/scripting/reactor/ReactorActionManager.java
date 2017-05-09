@@ -30,7 +30,7 @@ import client.IItem;
 import client.Item;
 import client.MapleClient;
 import client.MapleInventoryType;
-import constants.ServerConstants;
+import Config.ServerConstants;
 import scripting.AbstractPlayerInteraction;
 import server.MapleItemInformationProvider;
 import server.life.MapleLifeFactory;

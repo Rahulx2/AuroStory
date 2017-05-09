@@ -113,7 +113,7 @@ import tools.MaplePacketCreator;
 import tools.Pair;
 import tools.Randomizer;
 import client.anticheat.CheatTracker;
-import constants.ServerConstants;
+import Config.ServerConstants;
 import java.sql.Timestamp;
 
 public class MapleCharacter extends AbstractAnimatedMapleMapObject {

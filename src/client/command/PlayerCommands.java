@@ -152,7 +152,7 @@ public class PlayerCommands {
             }
 
         } else if (splitted[0].equals("commands") || splitted[0].equals("help")) {
-            player.dropMessage("IMPROVEDSTORY NEW COMMANDS");
+            player.dropMessage("Commands of AuroStory");
             player.dropMessage("@shop - Opens up the basic shop.");
             player.dropMessage("@potshop - Opens up the potion shop.");
             player.dropMessage("@spinel - Opens up Spinel from any location.");

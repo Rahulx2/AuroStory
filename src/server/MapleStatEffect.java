@@ -44,7 +44,7 @@ import client.SkillFactory;
 import client.status.MonsterStatus;
 import client.status.MonsterStatusEffect;
 import constants.InventoryConstants;
-import constants.ServerConstants;
+import Config.ServerConstants;
 import constants.skills.Assassin;
 import constants.skills.Aran;
 import constants.skills.Bandit;

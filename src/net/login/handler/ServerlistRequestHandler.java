@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package net.login.handler;
 
 import client.MapleClient;
-import constants.ServerConstants;
+import Config.ServerConstants;
 import java.rmi.RemoteException;
 import net.AbstractMaplePacketHandler;
 import net.login.LoginServer;
