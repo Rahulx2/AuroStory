@@ -1704,6 +1704,10 @@ public class MapleMap {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    public     List<MapleMapObject> getCharactersAsMapObjects() {
+                  return getMapObjectsInRange(new Point(0,0), Double.POSITIVE_INFINITY, Arrays.asList(MapleMapObjectType.PLAYER));
+        } 
+
     private class ExpireMapItemJob implements Runnable {
 
         private MapleMapItem mapitem;

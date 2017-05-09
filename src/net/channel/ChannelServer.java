@@ -105,6 +105,8 @@ public class ChannelServer implements Runnable {
     private int BOSS_DROP_RATE = Server.BOSS_DROP_RATE;
     private int MESO_RATE = Server.MESO_RATE;
     private HiredMerchantRegistry HMRegistry = new HiredMerchantRegistry(channel);
+    public boolean eventOn = false;
+    public int eventMap = 0;
 
     private ChannelServer(String key) {
         mapFactory = new MapleMapFactory(MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Map.wz")), MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/String.wz")));

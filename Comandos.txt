@@ -14,6 +14,11 @@ Comandos de Administrador:
 -!shutdown
 -!shutdownnow
 -!zakum
+-!pinkbean
+-!gmperson
+-!setgmlevel
+-!eventpoints
+-!worldtrip
 
 Comandos de GameMaster (GM):
 
@@ -24,7 +29,25 @@ Comandos de GameMaster (GM):
 -!chattype
 -!cody
 -!dispoNPCse
+-!bombmap
+-!bomb
+-!speakall
+-!diseasemap - SEAL - DARKNESS - WEAKEN - STUN - POISON - SEDUCE
 -!mynpcpos
+-!healplayer
+-!weaken
+-!sealmap
+-!weakenmap
+-!speak
+-!warpoxtop - !warpoxleft - !warpoxright - !warpoxmiddle
+-!event
+-!giveeventpoints
+-!killnear
+-!oxmap
+-!letters <message>
+-!mute
+-!clock
+-!clockd
 -!fame
 -!giftnx
 -!gmshop
@@ -58,7 +81,7 @@ Comandos de GameMaster (GM):
 -!say
 -!notice - n - p - l - nv - v - b: Ejemplo !notice n - !notice p - !notice l - !notice nv - !notice v - !notice v - !notice b
 
-Comandos de VIP:
+Comandos de Jr GM:
 
 -!ap
 -!chattype
@@ -100,6 +123,7 @@ Comandos de VIP:
 -!closemerchant - Syntax helper: !closemerchant <name>
 -!set - Syntax helper: !set <property> on / off
 -!warpmap
+-!whereami
 
 Comandos de Jugadores:
 

@@ -40,16 +40,23 @@ public final class CommandProcessor {
             String[] sp = s.split(" ");
             sp[0] = sp[0].toLowerCase().substring(1);
             c.getPlayer().addCommandToList(s);
+            if (c.getPlayer().gmLevel() >= 2) {
             if (JrGM.execute(c, sp, '!')) {
                 return true;
             }
-            if (c.getPlayer().gmLevel() >= 2) {
-                if (GMCommand.execute(c, sp, '!')) {
+            }
+            if (c.getPlayer().gmLevel() >= 1) {
+                if (Donor.execute(c, sp, '!')) {
                     return true;
                 }
             }
             if (c.getPlayer().gmLevel() >= 3) {
-                if (AdminCommand.execute(c, sp, '!')) {
+                if (GM.execute(c, sp, '!')) {
+                    return true;
+                }
+            }
+            if (c.getPlayer().gmLevel() >= 4) {
+                if (Admin.execute(c, sp, '!')) {
                     return true;
                 }
             }
@@ -59,7 +66,7 @@ public final class CommandProcessor {
         if (s.charAt(0) == '@') {
             String[] sp = s.split(" ");
             sp[0] = sp[0].toLowerCase().substring(1);
-            PlayerCommands.execute(c, sp, '@');
+            Player.execute(c, sp, '@');
             return true;
         }
         return false;

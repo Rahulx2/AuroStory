@@ -285,6 +285,8 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
     // PQs
     private static String[] ariantroomleader = new String[3];
     private static int[] ariantroomslot = new int[3];
+    //Events
+    private int eventpoints;
 
     private MapleCharacter() {
         canSmega = true;
@@ -329,7 +331,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
         ret.getInventory(MapleInventoryType.ETC).setSlotLimit(96);
 
         try {
-            PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT name, paypalNX, mPoints, cardNX FROM accounts WHERE id = ?");
+            PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT name, paypalNX, mPoints, cardNX, eventpoints FROM accounts WHERE id = ?");
             ps.setInt(1, ret.accountid);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -337,6 +339,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
                 ret.paypalnx = rs.getInt("paypalNX");
                 ret.maplepoints = rs.getInt("mPoints");
                 ret.cardnx = rs.getInt("cardNX");
+                ret.eventpoints = rs.getInt("eventpoints");
             }
             rs.close();
             ps.close();
@@ -620,6 +623,27 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
         List<MapleBuffStat> buffStatList = Arrays.asList(stat);
         deregisterBuffStats(buffStatList);
         cancelPlayerBuffs(buffStatList);
+    }
+
+    public int getEventPoints() {
+            return eventpoints;
+	}
+       
+    public void gainEventPoints(int eventpoints) {
+        this.eventpoints += eventpoints;
+        }
+       
+        public void setEventPoints(int eventpoints) {
+            this.eventpoints = eventpoints;
+        }
+
+    public void changeMap(int map) {
+        changeMap(map, 0);
+    }
+    
+    public void changeMap(int map, int portal) {
+        MapleMap warpMap = client.getChannelServer().getMapFactory().getMap(map);
+        changeMap(warpMap, warpMap.getPortal(portal));
     }
 
     public static class CancelCooldownAction implements Runnable {
@@ -2538,7 +2562,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
 
             rs.close();
             ps.close();
-            ps = con.prepareStatement("SELECT name, paypalNX, mPoints, cardNX, strikes, points FROM accounts WHERE id = ?");
+            ps = con.prepareStatement("SELECT name, paypalNX, mPoints, cardNX, strikes, points, eventpoints FROM accounts WHERE id = ?");
             ps.setInt(1, ret.accountid);
             rs = ps.executeQuery();
             if (rs.next()) {
@@ -2548,6 +2572,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
                 ret.cardnx = rs.getInt("cardNX");
                 ret.strikes = rs.getInt("strikes");
                 ret.points = rs.getInt("points");
+                ret.eventpoints = rs.getInt("eventpoints");
             }
             rs.close();
             ps.close();
@@ -3395,14 +3420,15 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
             }
             pse.close();
             ps.close();
-            ps = con.prepareStatement("UPDATE accounts SET `paypalNX` = ?, `mPoints` = ?, `cardNX` = ?, gm = ?, strikes = ?, points = ? WHERE id = ?");
+            ps = con.prepareStatement("UPDATE accounts SET `paypalNX` = ?, `mPoints` = ?, `cardNX` = ?, gm = ?, strikes = ?, points = ?, eventpoints = ? WHERE id = ?");
             ps.setInt(1, paypalnx);
             ps.setInt(2, maplepoints);
             ps.setInt(3, cardnx);
             ps.setInt(4, gmLevel);
             ps.setInt(5, strikes);
             ps.setInt(6, points);
-            ps.setInt(7, client.getAccID());
+            ps.setInt(7, eventpoints);
+            ps.setInt(8, client.getAccID());
             ps.executeUpdate();
             ps.close();
             if (storage != null) {

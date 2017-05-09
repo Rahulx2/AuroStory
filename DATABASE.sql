@@ -51,6 +51,7 @@ CREATE TABLE `accounts` (
   `tempban` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `strikes` tinyint(1) unsigned NOT NULL,
   `points` int(11) NOT NULL DEFAULT '0',
+  `eventpoints` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `ranking1` (`id`,`banned`,`gm`)

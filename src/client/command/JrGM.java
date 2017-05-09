@@ -120,6 +120,8 @@ class JrGM {
                 dis.close();
             } catch (Exception e) {
             }
+        } else if (splitted[0].equals("whereami")) {
+            player.dropMessage("You are on map " + player.getMap().getId());
         } else if (splitted[0].equals("job")) {
             player.changeJob(MapleJob.getById(Integer.parseInt(splitted[1])));
         } else if (splitted[0].equals("killall")) {

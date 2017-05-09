@@ -479,4 +479,20 @@ public class MapleInventoryManipulator {
     private static final boolean isWeapon(int itemId) {
         return itemId >= 1302000 && itemId < 1492024;
     }
+
+    public static void removeAllById(MapleClient c, int itemId, boolean checkEquipped) {
+        MapleInventoryType type = MapleItemInformationProvider.getInstance().getInventoryType(itemId);
+        for (IItem item : c.getPlayer().getInventory(type).listById(itemId)) {
+            if (item != null) {
+                removeFromSlot(c, type, item.getPosition(), item.getQuantity(), true, false);
+            }
+        }
+        if (checkEquipped) {
+            IItem ii = c.getPlayer().getInventory(type).findById(itemId);
+            if (ii != null) {
+                c.getPlayer().getInventory(MapleInventoryType.EQUIPPED).removeItem(ii.getPosition());
+                c.getPlayer().equipChanged();
+            }
+        }
+    }
 }

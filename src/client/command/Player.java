@@ -4,9 +4,11 @@
  */
 package client.command;
 
+import client.IItem;
 import client.ISkill;
 import client.MapleCharacter;
 import client.MapleClient;
+import client.MapleInventoryType;
 import client.MapleStat;
 import client.SkillFactory;
 import java.io.File;
@@ -22,14 +24,17 @@ import java.sql.ResultSet;
 import tools.Pair;
 import tools.DatabaseConnection;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import provider.MapleData;
 import provider.MapleDataProviderFactory;
+import server.MapleInventoryManipulator;
 
 /**
  *
  * @author Administrator
  */
-public class PlayerCommands {
+public class Player {
 
     static void execute(MapleClient c, String[] splitted, char heading) {
         ChannelServer cserv = c.getChannelServer();
@@ -69,7 +74,33 @@ public class PlayerCommands {
             } else {
                 player.dropMessage("Please make sure your AP is not over 32,767 and you have enough to distribute.");
             }
-        } else if (splitted[0].equals("maxskills")) {
+        }  else if (splitted[0].equalsIgnoreCase("clearinv")) {
+                if (splitted.length == 2) {
+                    if (splitted[1].equalsIgnoreCase("all")) {
+                        clearSlot(c, 1);
+                        clearSlot(c, 2);
+                        clearSlot(c, 3);
+                        clearSlot(c, 4);
+                        clearSlot(c, 5);
+                    } else if (splitted[1].equalsIgnoreCase("equip")) {
+                        clearSlot(c, 1);
+                    } else if (splitted[1].equalsIgnoreCase("use")) {
+                        clearSlot(c, 2);
+                    } else if (splitted[1].equalsIgnoreCase("etc")) {
+                        clearSlot(c, 3);
+                    } else if (splitted[1].equalsIgnoreCase("setup")) {
+                        clearSlot(c, 4);
+                    } else if (splitted[1].equalsIgnoreCase("cash")) {
+                        clearSlot(c, 5);
+                    } else {
+                        player.dropMessage("@clearslot " + splitted[1] + " does not exist!");
+                        player.dropMessage("@clearslot <all, equip, use, etc, setup, cash>");
+                    }
+                }
+                    } else if (splitted[0].equals("expfix")) {
+            player.setExp(0);
+            player.updateSingleStat(MapleStat.EXP, player.getExp());                 
+                } else if (splitted[0].equals("maxskills")) {
             if (!player.getCheatTracker().Spam(1200000, 0)) {
                 for (MapleData skill_ : MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/" + "String.wz")).getData("Skill.img").getChildren()) {
                     try {
@@ -86,7 +117,21 @@ public class PlayerCommands {
                 player.dropMessage("Please do not spam maxing skills");
                 c.getSession().write(MaplePacketCreator.enableActions());
             }
-        } else if (splitted[0].equals("dispose")) {
+        } else if (splitted[0].equals("gm")) {
+            if (splitted.length < 2) {
+                return;
+            }
+            if (!player.getCheatTracker().Spam(300000, 1)) { // 5 minutes.
+                try {
+                    c.getChannelServer().getWorldInterface().broadcastGMMessage(null, MaplePacketCreator.serverNotice(6, "Channel: " + c.getChannel() + "  " + player.getName() + ": " + StringUtil.joinStringFrom(splitted, 1)).getBytes());
+                } catch (Exception ex) {
+                    c.getChannelServer().reconnectWorld();
+                }
+                player.dropMessage("Message sent.");
+            } else {
+                player.dropMessage(1, "Please don't flood GMs with your messages.");
+            } 
+            } else if (splitted[0].equals("dispose")) {
             NPCScriptManager.getInstance().dispose(c);
             c.getSession().write(MaplePacketCreator.enableActions());
             player.message("Done.");
@@ -151,19 +196,41 @@ public class PlayerCommands {
                 }
             }
 
-        } else if (splitted[0].equals("commands") || splitted[0].equals("help")) {
+        } else if (splitted[0].equals("commands") || splitted[0].equals("help") || splitted[0].equals("ayuda")) {
             player.dropMessage("Commands of AuroStory");
-            player.dropMessage("@shop - Opens up the basic shop.");
-            player.dropMessage("@potshop - Opens up the potion shop.");
-            player.dropMessage("@spinel - Opens up Spinel from any location.");
-            player.dropMessage("@dispose - Solves various problems with NPCs.");
-            player.dropMessage("@anhero  - Causes your character to die.");
-            player.dropMessage("@storage - Opens up your storage.");
-            player.dropMessage("@whatdrops - Tells you what drops a particular item.");
-            player.dropMessage("@droplist - Tells you what items drop from a particular mob.");
+    //        player.dropMessage("@shop - Opens up the basic shop.");
+      //      player.dropMessage("@potshop - Opens up the potion shop.");
+        //    player.dropMessage("@spinel - Opens up Spinel from any location.");
+          //  player.dropMessage("@dispose - Solves various problems with NPCs.");
+        //    player.dropMessage("@anhero  - Causes your character to die.");
+        //    player.dropMessage("@storage - Opens up your storage.");
+         //   player.dropMessage("@whatdrops - Tells you what drops a particular item.");
+         //   player.dropMessage("@droplist - Tells you what items drop from a particular mob.");
             player.dropMessage("@str/@dex/@int/@luk - Adds stats faster.");
         } else {
-            player.message("Command " + heading + splitted[0] + " does not exist.: do @commands");
+            player.message("Command " + heading + splitted[0] + " does not exist.: do @commands - @help - @ayuda");
+        }
+    }
+
+    private static void clearSlot(MapleClient c, int type) {
+        MapleInventoryType invent;
+        if (type == 1) {
+            invent = MapleInventoryType.EQUIP;
+        } else if (type == 2) {
+            invent = MapleInventoryType.USE;
+        } else if (type == 3) {
+            invent = MapleInventoryType.ETC;
+        } else if (type == 4) {
+            invent = MapleInventoryType.SETUP;
+        } else {
+            invent = MapleInventoryType.CASH;
+        }
+        List<Integer> itemMap = new LinkedList<Integer>();
+        for (IItem item : c.getPlayer().getInventory(invent).list()) {
+            itemMap.add(item.getItemId());
+        }
+        for (int itemid : itemMap) {
+            MapleInventoryManipulator.removeAllById(c, itemid, false);
         }
     }
 }

@@ -65,6 +65,7 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.LinkedList;
 import net.LongValueHolder;
 import net.MaplePacket;
 import net.SendPacketOpcode;

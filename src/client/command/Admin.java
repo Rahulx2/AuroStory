@@ -31,6 +31,7 @@ import net.channel.ChannelServer;
 import tools.DatabaseConnection;
 import server.life.MapleMonster;
 import server.MapleOxQuiz;
+import server.MaplePortal;
 import server.life.MapleLifeFactory;
 import server.life.MapleNPC;
 import server.maps.MapleMap;
@@ -38,10 +39,11 @@ import tools.MaplePacketCreator;
 import tools.HexTool;
 import tools.StringUtil;
 
-class AdminCommand {
+class Admin {
 
     static boolean execute(MapleClient c, String[] splitted, char heading) {
         MapleCharacter player = c.getPlayer();
+        ChannelServer cserv = c.getChannelServer();
         if (splitted[0].equalsIgnoreCase("gc")) {
             System.gc();
 		} else if (splitted[0].equalsIgnoreCase("pnpc")) {
@@ -129,14 +131,97 @@ class AdminCommand {
                 player.getMap().addMapObject(npc);
                 player.getMap().broadcastMessage(MaplePacketCreator.spawnNPC(npc));
             }
-        } else if (splitted[0].equalsIgnoreCase("!saveall")) {
+        } else if (splitted[0].equals("gmperson")) {
+            if (splitted.length == 3) {
+                MapleCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(splitted[1]);
+                if (victim != null) {
+                    int level = 0;
+                    try {
+                        level = Integer.parseInt(splitted[2]);
+                    } catch (NumberFormatException blackness) {
+                    }
+                    victim.setGM(level);
+                    if (victim.isGM()) {
+                        victim.dropMessage(6, "You now have level " + level + " GM powers.");
+                    }
+                } else {
+                    player.dropMessage("The player " + splitted[1] + " is either offline or not in this channel");
+                }
+            }
+            
+        } else if (splitted[0].equals("worldtrip")) {
+                    MapleCharacter victim = cserv.getPlayerStorage().getCharacterByName(splitted[1]);
+                    for (int i = 1; i <= 10; i++) {
+                        MapleMap target = cserv.getMapFactory().getMap(200000000);
+                        MaplePortal targetPortal = target.getPortal(0);
+                        victim.changeMap(target, targetPortal);
+                        MapleMap target1 = cserv.getMapFactory().getMap(102000000);
+                        MaplePortal targetPortal1 = target.getPortal(0);
+                        victim.changeMap(target1, targetPortal1);
+                        MapleMap target2 = cserv.getMapFactory().getMap(103000000);
+                        MaplePortal targetPortal2 = target.getPortal(0);
+                        victim.changeMap(target2, targetPortal2);
+                        MapleMap target3 = cserv.getMapFactory().getMap(100000000);
+                        MaplePortal targetPortal3 = target.getPortal(0);
+                        victim.changeMap(target3, targetPortal3);
+                        MapleMap target4 = cserv.getMapFactory().getMap(200000000);
+                        MaplePortal targetPortal4 = target.getPortal(0);
+                        victim.changeMap(target4, targetPortal4);
+                        MapleMap target5 = cserv.getMapFactory().getMap(211000000);
+                        MaplePortal targetPortal5 = target.getPortal(0);
+                        victim.changeMap(target5, targetPortal5);
+                        MapleMap target6 = cserv.getMapFactory().getMap(230000000);
+                        MaplePortal targetPortal6 = target.getPortal(0);
+                        victim.changeMap(target6, targetPortal6);
+                        MapleMap target7 = cserv.getMapFactory().getMap(222000000);
+                        MaplePortal targetPortal7 = target.getPortal(0);
+                        victim.changeMap(target7, targetPortal7);
+                        MapleMap target8 = cserv.getMapFactory().getMap(251000000);
+                        MaplePortal targetPortal8 = target.getPortal(0);
+                        victim.changeMap(target8, targetPortal8);
+                        MapleMap target9 = cserv.getMapFactory().getMap(220000000);
+                        MaplePortal targetPortal9 = target.getPortal(0);
+                        victim.changeMap(target9, targetPortal9);
+                        MapleMap target10 = cserv.getMapFactory().getMap(221000000);
+                        MaplePortal targetPortal10 = target.getPortal(0);
+                        victim.changeMap(target10, targetPortal10);
+                        MapleMap target11 = cserv.getMapFactory().getMap(240000000);
+                        MaplePortal targetPortal11 = target.getPortal(0);
+                        victim.changeMap(target11, targetPortal11);
+                        MapleMap target12 = cserv.getMapFactory().getMap(600000000);
+                        MaplePortal targetPortal12 = target.getPortal(0);
+                        victim.changeMap(target12, targetPortal12);
+                        MapleMap target13 = cserv.getMapFactory().getMap(800000000);
+                        MaplePortal targetPortal13 = target.getPortal(0);
+                        victim.changeMap(target13, targetPortal13);
+                        MapleMap target14 = cserv.getMapFactory().getMap(680000000);
+                        MaplePortal targetPortal14 = target.getPortal(0);
+                        victim.changeMap(target14, targetPortal14);
+                        MapleMap target15 = cserv.getMapFactory().getMap(105040300);
+                        MaplePortal targetPortal15 = target.getPortal(0);
+                        victim.changeMap(target15, targetPortal15);
+                        MapleMap target16 = cserv.getMapFactory().getMap(990000000);
+                        MaplePortal targetPortal16 = target.getPortal(0);
+                        victim.changeMap(target16, targetPortal16);
+                        MapleMap target17 = cserv.getMapFactory().getMap(100000001);
+                        MaplePortal targetPortal17 = target.getPortal(0);
+                        victim.changeMap(target17, targetPortal17);
+                    }
+                    victim.changeMap(c.getPlayer().getMap(), c.getPlayer().getMap().findClosestSpawnpoint(
+                            c.getPlayer().getPosition()));            
+            } else if (splitted[0].equalsIgnoreCase("saveall")) {
             for (ChannelServer chan : ChannelServer.getAllInstances()) {
                 for (MapleCharacter chr : chan.getPlayerStorage().getAllCharacters()) {
                     chr.saveToDB(true);
                 }
             }
             player.dropMessage("Save Complete.");
-        } else if (splitted[0].equalsIgnoreCase("npc")) {
+        } else if (splitted[0].equalsIgnoreCase("setgmlevel")) {
+            MapleCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(splitted[1]);
+            victim.setGM(Integer.parseInt(splitted[2]));
+            player.message("Done.");
+            victim.getClient().disconnect();
+            } else if (splitted[0].equalsIgnoreCase("npc")) {
             MapleNPC npc = MapleLifeFactory.getNPC(Integer.parseInt(splitted[1]));
             if (npc != null) {
                 npc.setPosition(player.getPosition());
@@ -155,7 +240,12 @@ class AdminCommand {
                 player.getMap().setOxQuiz(false);
                 player.getMap().setOx(null);
             }
-        } else if (splitted[0].equalsIgnoreCase("pinkbean")) {
+        } else if (splitted[0].equalsIgnoreCase("eventpoints")) {
+            MapleCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(splitted[1]);
+            victim.gainEventPoints(Integer.parseInt(splitted[2]));
+            player.dropMessage("You have given " + splitted[1] + " " + splitted[2] + " Event Points.");
+           victim.dropMessage(6, player.getName() + " has given you " + splitted[2] + " Event Points.");  
+            } else if (splitted[0].equalsIgnoreCase("pinkbean")) {
             player.getMap().spawnMonsterOnGroudBelow(MapleLifeFactory.getMonster(8820001), player.getPosition());
         } else if (splitted[0].equalsIgnoreCase("playernpc")) {
             player.playerNPC(c.getChannelServer().getPlayerStorage().getCharacterByName(splitted[1]), Integer.parseInt(splitted[2]));
