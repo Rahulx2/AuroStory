@@ -1,35 +1,18 @@
-/*
-	This file is part of the OdinMS Maple Story Server
-    Copyright (C) 2008 Patrick Huy <patrick.huy@frz.cc>
-		       Matthias Butz <matze@odinms.de>
-		       Jan Christian Meyer <vimes@odinms.de>
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation version 3 as published by
-    the Free Software Foundation. You may not use, modify or distribute
-    this program under any other version of the GNU Affero General Public
-    License.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/*
- * @author Moogra
- */
+var from = [270010100, 270010200, 270010300, 270010400, 270010500, 270020100,
+            270020200, 270020300, 270020400, 270020500, 270030100, 270030200,
+            270030300, 270030400, 270030500, 270040000, 270040100];
+var to = [[270010110, 3], [270010210, 3], [270010310, 3], [270010410, 3],
+          [270020000, 4], [270020110, 3], [270020210, 3], [270020310, 3], 
+          [270020410, 3], [270030000, 4], [270030110, 3], [270030210, 3],
+          [270030310, 3], [270030410, 3], [270040000, 3], [270040100, 3],
+          [270050000, 0]];
+          
 function enter(pi) {
-    var mapid = pi.getPlayer().getMapId();
-    if (pi.getPlayer().getMapId() != 270040100) {
-        pi.warp(mapid / 100 % 10 == 5 ? (mapid + 9500) : (mapid + 100), 0);
-        return true;
-    } else {
-        pi.warp(270050000, 0);
-        return true;
-    }
-    return false;
-}
+    for (var i = 0; i < from.length; i++)
+        if (pi.getPlayer().getMapId() == from[i]) {
+            pi.warp(to[i][0], to[i][1]);
+            return true;
+        }
+    pi.warp(togo, 0);
+    return true;
+}  

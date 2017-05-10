@@ -29,6 +29,14 @@ public class Server {
     public static final byte DROP_RATE = 2;
     public static final byte BOSS_DROP_RATE = 3;
     
+    //Mensaje de Login
+    public static int START_SYS_NPC = 1; 
+    public static String INICIAR_MENSAJE = "Welcome to AuroStory v83!"; // Up to you :P: 
+    public static int INICIAR_NPC = 9900002; // Up to you :P:
+    
+    //Cash Shop
+    public static final boolean CashShopEstado = false; //True es Abierto / False es Cerrado
+    
     // Login Configuration
     public static final byte NUM_WORLDS = 1;
     public static final byte FLAG = 2;

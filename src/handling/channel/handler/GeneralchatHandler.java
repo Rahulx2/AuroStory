@@ -25,11 +25,13 @@ import client.command.CommandProcessor;
 import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import client.MapleClient;
+import server.addon.WordFilter;
 
 public final class GeneralchatHandler extends handling.AbstractMaplePacketHandler {
 
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         String text = slea.readMapleAsciiString();
+        text = WordFilter.illegalArrayCheck(text, c.getPlayer());
         if (!CommandProcessor.processCommand(c, text)) {
             c.getPlayer().getMap().broadcastMessage(MaplePacketCreator.getChatText(c.getPlayer().getId(), text, c.getPlayer().getGMChat(), slea.readByte()));
         }

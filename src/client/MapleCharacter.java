@@ -115,6 +115,8 @@ import tools.Randomizer;
 import client.anticheat.CheatTracker;
 import Config.Server;
 import java.sql.Timestamp;
+import server.events.MapleFitness;
+import server.events.MapleOla;
 
 public class MapleCharacter extends AbstractAnimatedMapleMapObject {
 
@@ -287,6 +289,19 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
     private static int[] ariantroomslot = new int[3];
     //Events
     private int eventpoints;
+    //GM Travel
+    private long arrivalTime = 0;
+    //Gaga Goes
+    public int counts = 0; 
+    //Island Race
+    private int entryNumber = 0;
+    private int progress = 0;
+     // event
+    private byte team = 0;
+    private MapleFitness fitness;
+    private MapleOla ola;
+   // private byte team = 0;
+    private long snowballattack;
 
     private MapleCharacter() {
         canSmega = true;
@@ -856,7 +871,17 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
     }
 
     public void changeMap(final MapleMap to, final MaplePortal pto) {
-        if (to.getId() == 100000200 || to.getId() == 211000100 || to.getId() == 220000300) {
+         int z = getProgress();
+        if ((to.getId() == 100010000 && z == 0) || (to.getId() == 100020000 && z == 1) || (to.getId() == 100030000 && z == 2) || (to.getId() == 100040000 && z == 3) || (to.getId() == 100040100 && z == 4) || (to.getId() == 100050000 && z == 5) || (to.getId() == 101000000 && z == 6) || (to.getId() == 101010000 && z == 7) || (to.getId() == 101010100 && z == 8) || (to.getId() == 101030000 && z == 9) || (to.getId() == 101030100 && z == 10) || (to.getId() == 101030200 && z == 11) || (to.getId() == 101030300 && z == 12) || (to.getId() == 101030400 && z == 13) || (to.getId() == 101040000 && z == 14) || (to.getId() == 102000000 && z == 15) || (to.getId() == 102010000 && z == 16) || (to.getId() == 102020000 && z == 17) || (to.getId() == 102030000 && z == 18) || (to.getId() == 102040000 && z == 19) || (to.getId() == 102050000 && z == 20) || (to.getId() == 103000000 && z == 21) || (to.getId() == 103010000 && z == 22) || (to.getId() == 103020000 && z == 23) || (to.getId() == 103020100 && z == 24) || (to.getId() == 103020200 && z == 25) || (to.getId() == 103030000 && z == 26) || (to.getId() == 104010000 && z == 27) || (to.getId() == 104020000 && z == 28) || (to.getId() == 104030000 && z == 29) || (to.getId() == 104040000 && z == 30) || (to.getId() == 100000000 && z == 31)) {
+            changeMapInternal(to, pto.getPosition(), MaplePacketCreator.getWarpToMap(to, pto.getId(), this));
+            if (client.getChannelServer().getRace() == true && client.getChannelServer().getWaiting() == false){
+         setProgress(getProgress() + 1);
+         raceStatus();
+            }
+             } else if (client.getChannelServer().getRace() == true && client.getChannelServer().getWaiting() == false) {
+                 changeMapInternal(to, pto.getPosition(), MaplePacketCreator.getWarpToMap(to, pto.getId(), this));
+            dropMessage("[Notice]: You are either cheating, or going the wrong direction. Your progress is not being counted.");
+    } else if (to.getId() == 100000200 || to.getId() == 211000100 || to.getId() == 220000300) {
             changeMapInternal(to, pto.getPosition(), MaplePacketCreator.getWarpToMap(to, pto.getId() - 2, this));
         } else {
             changeMapInternal(to, pto.getPosition(), MaplePacketCreator.getWarpToMap(to, pto.getId(), this));
@@ -1363,6 +1388,14 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
         }
         return ret;
     }
+    
+    public void setArrivalTime(int duration) {
+        arrivalTime = System.currentTimeMillis() + duration * 1000;
+    }
+
+    public boolean isRideFinished() {
+        return arrivalTime < System.currentTimeMillis();
+    }
 
     public int getAllianceRank() {
         return this.allianceRank;
@@ -1371,6 +1404,38 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
     public int getAllowWarpToId() {
         return warpToId;
     }
+    
+    public byte getTeam() {
+        return team;
+    }
+    
+    public void setTeam(int team) {
+        this.team = (byte) team;
+    }
+    
+    public long getLastSnowballAttack() {
+        return snowballattack;
+    }
+
+    public void setLastSnowballAttack(long time) {
+        this.snowballattack = time;
+    }  
+
+    public MapleOla getOla() {
+        return ola;
+    }
+
+    public void setOla(MapleOla ola) {
+        this.ola = ola;
+    }
+
+    public MapleFitness getFitness() {
+        return fitness;
+    }
+
+    public void setFitness(MapleFitness fit) {
+        this.fitness = fit;
+    }  
 
     public static String getAriantRoomLeaderName(int room) {
         return ariantroomleader[room];
@@ -2259,6 +2324,64 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
     public boolean inCS() {
         return incs;
     }
+    
+    public int getEntryNumber() {
+        return entryNumber;
+    }
+
+        public void setEntryNumber(int number) {
+            this.entryNumber = number;
+        }
+
+         public int getProgress() {
+        return progress;
+    }
+
+        public void setProgress(int number) {
+            this.progress = number;
+        }
+
+        public void setWinnerAndEndRace() {
+                client.getChannelServer().setRace(false);
+                client.getChannelServer().setCompetitors(0);
+                client.getChannelServer().setWaiting(false);
+                                        try {
+          client.getChannelServer().getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(6, "[Event]: Congradulations to " + getName() + " on winning the Great Victoria Island Race! Thanks to those who played!").getBytes());
+             } catch (RemoteException x) {
+               client.getChannelServer().reconnectWorld();
+                 }
+        }
+
+        public void raceStatus (){
+            if (getProgress() == 4){
+                dropMessage("[Notice]: You're off to a nice start!");
+            }
+            if (getProgress() == 7){
+                dropMessage("[Notice]: Nice, you made it to the Magician town, Ellinia!");
+            }
+            if (getProgress() == 8){
+                dropMessage("[Notice]: You're making good progress.");
+            }
+            if (getProgress() == 15){
+                dropMessage("[Notice]: You are halfway there! Don't give up now!");
+            }
+            if (getProgress() == 16){
+                dropMessage("[Notice]: You made it to the Desert town of Perion!");
+            }
+             if (getProgress() == 22){
+                dropMessage("[Notice]: You made it to the hood, Kerning City.");
+            }
+            if (getProgress() == 24){
+                dropMessage("[Notice]: You're almost there.");
+            }
+            if (getProgress() == 31){
+                dropMessage("[Notice]: Just one more map!");
+            }
+            if (getProgress() == 32){
+                dropMessage("[Notice]: You did it! You have won the race!");
+                setWinnerAndEndRace();
+            }
+        }
 
     public boolean inMTS() {
         return inmts;
@@ -2914,6 +3037,16 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
     public static int rand(int l, int u) {
         return Randomizer.getInstance().nextInt(u - l + 1) + l;
     }
+    
+    public void addCount() { 
+        if(this.counts > 3) { 
+            this.counts = 0; 
+            changeMap(922240200); 
+        } else { 
+            changeMap(922240000); 
+            this.counts++; 
+        } 
+    }  
 
     private void recalcLocalStats() {
         int oldmaxhp = localmaxhp;
@@ -4312,6 +4445,40 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
     public void setPoints(int newPoints) {
         this.points = newPoints;
     }
+    
+    public boolean checkSQuest(int questid) throws SQLException {
+        try {
+            Connection con = DatabaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement("SELECT questId FROM completedquests WHERE characterid = ? AND questId = ?");
+            ps.setInt(1, this.id);
+            ps.setInt(2, questid);
+            ResultSet rs = ps.executeQuery();
+            boolean result = rs.next() ? false : true;
+            System.out.println("Statement was " + result);
+            ps.close();
+            return result;
+        }
+        catch (Exception e) {
+            System.out.println("Failed to load from db.");
+        }
+        return false;
+    }  
+    
+    public void completeSQuest(int questid) throws SQLException {
+        try {
+            if (checkSQuest(questid)) {
+                Connection con1 = DatabaseConnection.getConnection();
+                PreparedStatement ps;
+                ps = con1.prepareStatement("insert into completedquests (characterid, questId) values (?,?)");
+                ps.setInt(1, this.id);
+                ps.setInt(2, questid);
+                ps.executeUpdate();
+                ps.close();
+            }
+        } catch (Exception Ex) {
+            System.out.println("Tried to save a duplicate questid to db.");
+        }
+    }  
 }
 
 

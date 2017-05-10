@@ -91,6 +91,7 @@ import server.MaplePlayerShopItem;
 import server.MapleShopItem;
 import server.MapleTrade;
 import server.cashshop.CashDataProvider;
+import server.events.MapleSnowball;
 import server.life.MapleMonster;
 import server.life.MapleNPC;
 import server.life.MobSkill;
@@ -1996,6 +1997,14 @@ public class MaplePacketCreator {
         mplew.writeInt(chr.getId());
         mplew.write(chr.getLevel());
         mplew.writeMapleAsciiString(chr.getName());
+        if (chr.getMount() == null) {
+            mplew.writeInt(1); // mob level
+            mplew.write0(8); // mob exp + tiredness
+        } else {
+            mplew.writeInt(chr.getMount().getLevel());
+            mplew.writeInt(chr.getMount().getExp());
+            mplew.writeInt(chr.getMount().getTiredness());
+        }
         if (chr.getGuildId() < 1) {
             mplew.writeMapleAsciiString("");
             mplew.write(new byte[6]);
@@ -2013,7 +2022,11 @@ public class MaplePacketCreator {
             }
         }
         mplew.writeInt(0); //Not sure anymore this should be an int.
-        mplew.writeShort(0);
+        mplew.write(0);
+        mplew.write(chr.getChalkboard() == null ? 0 : 1);
+        if (chr.getChalkboard() != null) {
+            mplew.writeMapleAsciiString(chr.getChalkboard());
+        }
         mplew.write(0xfc);
         mplew.write(1);
 
@@ -3116,6 +3129,13 @@ public class MaplePacketCreator {
             mplew.writeLong(0);
         }
         return mplew.getPacket();
+    }
+    
+    public static MaplePacket earnTitleMessage(String msg) {
+	final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+	mplew.writeShort(SendPacketOpcode.EARN_TITLE_MESSAGE.getValue());
+	mplew.writeMapleAsciiString(msg);
+	return mplew.getPacket();
     }
 
     private static boolean isFirstLong(List<MapleBuffStat> statups) {
@@ -4914,7 +4934,87 @@ public class MaplePacketCreator {
         return mplew.getPacket();
     }
 
-    public static MaplePacket showForcedEquip() {
+    public static MaplePacket showForcedEquip(int team) {
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+        mplew.writeShort(SendPacketOpcode.FORCED_MAP_EQUIP.getValue());
+        if (team > -1) {
+        mplew.writeShort(team);   // 00 = red, 01 = blue
+        }
+        return mplew.getPacket();
+    }
+       public static MaplePacket coconutScore(int team1, int team2) {
+           MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+           mplew.writeShort(SendPacketOpcode.COCONUT_SCORE.getValue());
+           mplew.writeShort(team1);
+           mplew.writeShort(team2);
+           return mplew.getPacket();
+       }
+       
+       public static MaplePacket hitCoconut(boolean spawn, int id, int type) {
+           // FF 00 00 00 00 00 00
+           MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+           mplew.writeShort(SendPacketOpcode.HIT_COCONUT.getValue());
+           if (spawn) {
+            mplew.write(HexTool.getByteArrayFromHexString("00 80 00 00 00"));
+            } else {
+            mplew.writeInt(id);
+            mplew.write(type); // What action to do for the coconut.
+       }
+            return mplew.getPacket();
+  }  
+       
+       public static MaplePacket leftKnockBack() {
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter(2);
+        mplew.writeShort(SendPacketOpcode.LEFT_KNOCK_BACK.getValue());
+        return mplew.getPacket();
+    }
+
+    public static MaplePacket rollSnowBall(boolean entermap, int type, MapleSnowball ball0, MapleSnowball ball1) {
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+        mplew.writeShort(SendPacketOpcode.ROLL_SNOWBALL.getValue());
+        if (entermap) {
+            mplew.write0(21);
+        } else {
+            mplew.write(type);// 0 = move, 1 = roll, 2 is down disappear, 3 is up disappear
+            mplew.writeInt(ball0.getSnowmanHP() / 75);
+            mplew.writeInt(ball1.getSnowmanHP() / 75);
+            mplew.writeShort(ball0.getPosition());//distance snowball down, 84 03 = max
+            mplew.write(-1);
+            mplew.writeShort(ball1.getPosition());//distance snowball up, 84 03 = max
+            mplew.write(-1);
+        }
+        return mplew.getPacket();
+    }
+
+    public static MaplePacket hitSnowBall(int what, int damage) {
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter(7);
+        mplew.writeShort(SendPacketOpcode.HIT_SNOWBALL.getValue());
+        mplew.write(what);
+        mplew.writeInt(damage);
+        return mplew.getPacket();
+    }
+
+    /**
+     * Sends a Snowball Message<br>
+     *
+     * Possible values for <code>message</code>:<br>
+     * 1: ... Team's snowball has passed the stage 1.<br>
+     * 2: ... Team's snowball has passed the stage 2.<br>
+     * 3: ... Team's snowball has passed the stage 3.<br>
+     * 4: ... Team is attacking the snowman, stopping the progress<br>
+     * 5: ... Team is moving again<br>
+     *
+     * @param message
+     **/
+    public static MaplePacket snowballMessage(int team, int message) {
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter(7);
+        mplew.writeShort(SendPacketOpcode.SNOWBALL_MESSAGE.getValue());
+        mplew.write(team);// 0 is down, 1 is up
+        mplew.writeInt(message);
+        return mplew.getPacket();
+    }  
+       
+       public static MaplePacket showForcedEquip() {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(SendPacketOpcode.FORCED_MAP_EQUIP.getValue());
         return mplew.getPacket();

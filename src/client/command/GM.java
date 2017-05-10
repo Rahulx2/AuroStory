@@ -241,7 +241,25 @@ class GM {
             } else {
                 player.dropMessage("Player not found");
             }
-            }  else if (splitted[0].equals("clock")) {
+            }  else if (splitted[0].equals("startrace")) {
+                 if (!cserv.getRace() && !cserv.getWaiting()){
+            cserv.setWaiting(true);
+            cserv.setWaitingTime(2); //Replace with time in minutes you want to wait.
+            cserv.raceCountdown();
+            try {
+           cserv.getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(6, "[Event]: The Great Victoria Island Race will begin soon! Please head to Henesys!").getBytes());
+             } catch (RemoteException e) {
+               cserv.reconnectWorld();
+                 }
+                        try {
+           cserv.getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(6, "Use @joinrace to join and @rules to see the rules and regulations of this event.").getBytes());
+             } catch (RemoteException e) {
+               cserv.reconnectWorld();
+                 }
+                 }else{
+                    player.dropMessage("[Notice]: A race is still in progress.");
+                 }
+                 } else if (splitted[0].equals("clock")) {
             player.getMap().broadcastMessage(MaplePacketCreator.getClock(getOptionalIntArg(splitted, 1, 60)));
         } else if (splitted[0].equalsIgnoreCase("clockd")) {
             player.getMap().setClock(false);

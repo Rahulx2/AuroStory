@@ -57,7 +57,8 @@ public final class LoginPasswordHandler implements MaplePacketHandler {
             c.getSession().write(MaplePacketCreator.getTempBan(tempban, reason));
             return;
         }
-
+        
+        c.setMessageToggle(0);
         if (c.finishLogin() == 0) {
             c.getSession().write(MaplePacketCreator.getAuthSuccessRequestPin(c, c.getAccountName()));
             final MapleClient client = c;

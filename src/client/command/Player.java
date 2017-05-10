@@ -146,7 +146,35 @@ public class Player {
             player.dropMessage("FAIL :D");
         } else if (splitted[0].equals("shop")) {
             MapleShopFactory.getInstance().getShop(6969).sendShop(c);
-        } else if (splitted[0].equals("potshop")) {
+        } else if (splitted[0].equals("joinrace")) {
+                   if (c.getPlayer().getEntryNumber() < 1) {
+                   if (c.getPlayer().getMapId() == 100000000){
+                   if (cserv.getWaiting()){
+                       c.getPlayer().setEntryNumber(cserv.getCompetitors() + 1);
+                       cserv.setCompetitors(cserv.getCompetitors() + 1);
+		player.dropMessage("[Notice]: You have successfully joined the race! Your entry number is " + c.getPlayer().getEntryNumber() + ".");
+                   } else {
+                       player.dropMessage("There is no event currently taking place.");
+                   }
+                   } else {
+                        player.dropMessage("You are not at Henesys.");
+                   }
+                   }else{
+                         player.dropMessage("You have already joined this race.");
+                   }
+                 } else if (splitted[0].equals("rules")) {
+                   if (cserv.getWaiting() || cserv.getRace()) {
+		player.message("The Official Rules and Regulations of the Great Victoria Island Race:");
+                player.message("-------------------------------------------------------------------------------------------");
+                player.message("To win you must race from Henesys all the way to Henesys going Eastward.");
+                player.message("Rule #1: No cheating. You can't use any warping commands, or you'll be disqualified.");
+                player.message("Rule #2: You may use any form of transportation. This includes Teleport, Flash Jump and Mounts.");
+                player.message("Rule #3: You are NOT allowed to kill any monsters in your way. They are obstacles.");
+                player.message("Rule #4: You may start from anywhere in Henesys, but moving on to the next map before the start won't work.");
+                   } else {
+                       player.message("There is no event currently taking place.");
+                   }
+                   } else if (splitted[0].equals("potshop")) {
             MapleShopFactory.getInstance().getShop(1336).sendShop(c);
         } else if (splitted[0].equals("storage")) {
             player.getStorage().sendStorage(player.getClient(), 1032006);
@@ -207,6 +235,8 @@ public class Player {
          //   player.dropMessage("@whatdrops - Tells you what drops a particular item.");
          //   player.dropMessage("@droplist - Tells you what items drop from a particular mob.");
             player.dropMessage("@str/@dex/@int/@luk - Adds stats faster.");
+            player.dropMessage("@joinrace - Enjoy Race of Event GM");
+            player.dropMessage("@rules - Rules of Island Race");
         } else {
             player.message("Command " + heading + splitted[0] + " does not exist.: do @commands - @help - @ayuda");
         }

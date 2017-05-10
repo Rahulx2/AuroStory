@@ -53,6 +53,7 @@ import handling.mundo.MaplePartyCharacter;
 import handling.mundo.PartyOperation;
 import handling.mundo.guild.MapleGuildCharacter;
 import handling.mundo.remote.WorldChannelInterface;
+import java.util.Arrays;
 import scripting.npc.NPCConversationManager;
 import scripting.npc.NPCScriptManager;
 import scripting.quest.QuestActionManager;
@@ -95,6 +96,8 @@ public class MapleClient {
     private boolean Beta = false;
     private Calendar tempban;
     private byte greason = 0;
+    //Message
+    private boolean message;
 
     public MapleClient(MapleAESOFB send, MapleAESOFB receive, IoSession session) {
         this.send = send;
@@ -124,6 +127,40 @@ public class MapleClient {
     public MapleCharacter getPlayer() {
         return player;
     }
+    
+    
+public boolean messageOn() { 
+    PreparedStatement ps; 
+    try { 
+        ps = DatabaseConnection.getConnection().prepareStatement("SELECT message FROM accounts WHERE id = ?"); 
+        ps.setInt(1, this.getAccID()); 
+        ResultSet rs = ps.executeQuery(); 
+        while (rs.next()) { 
+            if (rs.getInt("message") == 0) { 
+                message = false; 
+            } else { 
+                message = true; 
+        } 
+        } 
+        rs.close(); 
+        ps.close(); 
+    } catch (Exception e) { 
+        System.out.println("message error"); 
+    } 
+    return message; 
+} 
+     
+    public void setMessageToggle(int x) { 
+        try { 
+            PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE accounts SET message = ? WHERE id = ?"); 
+            ps.setInt(1, x); 
+            ps.setInt(2, getAccID()); 
+            ps.executeUpdate(); 
+            ps.close(); 
+        } catch (SQLException e) { 
+            e.printStackTrace(); 
+        } 
+    }  
 
     public void setPlayer(MapleCharacter player) {
         this.player = player;
@@ -413,29 +450,52 @@ public class MapleClient {
         return "0.0.0.0";
     }
 
-    public void updateMacs(String macData) {
-        for (String mac : macData.split(", ")) {
-            macs.add(mac);
-        }
-        StringBuilder newMacData = new StringBuilder();
-        Iterator<String> iter = macs.iterator();
-        while (iter.hasNext()) {
-            String cur = iter.next();
-            newMacData.append(cur);
-            if (iter.hasNext()) {
-                newMacData.append(", ");
-            }
-        }
-        try {
-            PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE accounts SET macs = ? WHERE id = ?");
-            ps.setString(1, newMacData.toString());
-            ps.setInt(2, accId);
-            ps.executeUpdate();
-            ps.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    public void updateMacs(String macData) { 
+        boolean ban = false; 
+        try { 
+            if (macs.isEmpty()) { 
+                PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT macs FROM accounts WHERE id = ?"); 
+                ps.setInt(1, accId); 
+                ResultSet rs = ps.executeQuery(); 
+                if (rs.next()) { 
+                    String s = rs.getString("macs"); 
+                    if (s != null) { 
+                        for (String mac : s.split(", ")) { 
+                            if (mac.length() != 0) { 
+                                macs.add(mac); 
+                            } 
+                        } 
+                    } 
+                } 
+                rs.close(); 
+                ps.close(); 
+            } 
+        } catch (SQLException se) { 
+        } 
+        macs.addAll(Arrays.asList(macData.split(", "))); 
+        StringBuilder newMacData = new StringBuilder(16); 
+        for (String s : macs) { 
+            newMacData.append(s); 
+            if (s.equals("00-1C-C0-E8-AB-70")) { // troublesome mac, should be blacklisted everywhere. insert more here 
+                ban = true; 
+            } 
+            newMacData.append(", "); 
+        } 
+        newMacData.setLength(newMacData.length() - 2); 
+        try { 
+            PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE accounts SET macs = ?, ip = ? WHERE id = ?"); 
+            ps.setString(1, newMacData.toString()); 
+            ps.setString(2, session.getRemoteAddress().toString().split(":")[0]); 
+            ps.setInt(3, accId); 
+            ps.executeUpdate(); 
+            ps.close(); 
+        } catch (SQLException e) { 
+        } 
+        if (ban) { 
+            this.banPlayer("banned", true); 
+            this.disconnect(); 
+        } 
+    }  
 
     public void setAccID(int id) {
         this.accId = id;
@@ -764,6 +824,36 @@ public class MapleClient {
     public synchronized void announce(MaplePacket packet) {//MINA CORE IS A FUCKING BITCH AND I HATE IT <3
         session.write(packet);
     }
+
+    public void banPlayer(String reason, boolean accban) { 
+        try { 
+            Connection con = DatabaseConnection.getConnection(); 
+            String ip = session.getRemoteAddress().toString().split(":")[0]; 
+            PreparedStatement ps = con.prepareStatement("SELECT ip FROM ipbans WHERE ip = ?"); 
+            ps.setString(1, ip); 
+            ResultSet rs = ps.executeQuery(); 
+            if (!rs.next()) { 
+                if (!ip.startsWith("/220.255")) { // sg ip 
+                    ps = con.prepareStatement("INSERT INTO ipbans VALUES (DEFAULT, ?)"); 
+                    ps.setString(1, ip); 
+                    ps.executeUpdate(); 
+                    ps.close(); 
+                } 
+            } 
+            rs.close(); 
+            ps.close(); 
+            if (!accban) { 
+                return; 
+            } 
+            ps = con.prepareStatement("UPDATE accounts SET banned = 1, banreason = ? WHERE id = ?"); 
+            ps.setString(1, reason); 
+            ps.setInt(2, accId); 
+            ps.executeUpdate(); 
+            ps.close(); 
+        } catch (SQLException e) { 
+            e.printStackTrace(); 
+        } 
+    }  
 
     private static class CharNameAndId {
 

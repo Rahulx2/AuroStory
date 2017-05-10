@@ -1,6 +1,11 @@
-function act(){
-    rm.changeMusic("Bgm16/FightingPinkBeen");
-    rm.spawnMonster(9420547, -477, 640);
-    rm.mapMessage(5, "Once you drop the Spirit of Fantasy Theme Park, Scarlion will appear");
-	rm.dropItems();
+/* @Author SharpAceX
+* 5511000.js: Summons Scarlion.
+*/
+
+function act() {
+if (rm.getReactor().getMap().getMonsterById(9420547) == null) {
+rm.spawnMonster(9420547,-238,636);
+}
+rm.mapMessage(6, "Beware! The furious Scarlion has shown himself!");
+rm.createMapMonitor(551000000,"sp");
 }

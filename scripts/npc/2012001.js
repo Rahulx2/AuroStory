@@ -25,12 +25,26 @@
 **/
 
 function start() {
-    var em = cm.getEventManager("Boats");
-    if (em.getProperty("entry") == "true")
-        cm.sendYesNo("It looks like there are plenty of room for this ride. Please have your ticket ready so I can let you in. The ride will be long, but you'll get to your destination just fine. What do you think? Do you wants to get on this ride?");
-    else {
-        if (em.getProperty("entry") == "false" && em.getProperty("docked") == "true")
-            cm.sendOk("We are just cleaning the boat from the last voyage.\r\nBoarding starts 5 minutes before departure.\r\nTry again shortly.");
+    if(cm.haveItem(4031047)){
+        var em = cm.getEventManager("Boats");
+        if (em.getProperty("entry") == "true" && cm.getPlayer().getMap().hasBoat() == 2) {
+            cm.sendYesNo("It looks like there are plenty of room for this ride. Please have your ticket ready so I can let you in. The ride will be long, but you'll get to your destination just fine. What do you think? Do you wants to get on this ride?");
+        } else {
+            if (em.getProperty("entry") == "false" && em.getProperty("docked") == "true" && cm.getPlayer().getMap().hasBoat() == 2) {
+                cm.sendOk("We are just cleaning the boat from the last voyage.\r\nBoarding starts 5 minutes before departure.\r\nTry again shortly.");
+            } else {
+                if (cm.getPlayer().getMap().hasBoat() == 2) {
+                    cm.sendOk("The boat to Ellinia is ready to take off, please be patient and wait for next one.");
+                    cm.dispose();
+                } else{
+                    cm.sendOk("The boat to Ellinia has already taken off, please be patient and wait for next one.");
+                    cm.dispose();
+                }
+            }
+            cm.dispose();
+        }
+    } else {
+        cm.sendOk("Make sure you got a Ellinia ticket to travel in this boat.");
         cm.dispose();
     }
 }

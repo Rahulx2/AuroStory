@@ -52,6 +52,8 @@ import tools.DatabaseConnection;
 import handling.mundo.guild.MapleAlliance;
 import handling.mundo.guild.MapleGuild;
 import handling.mundo.remote.WorldChannelInterface;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import provider.MapleData;
 import provider.MapleDataProviderFactory;
 import scripting.AbstractPlayerInteraction;
@@ -61,6 +63,7 @@ import server.MapleItemInformationProvider;
 import server.MapleSquad;
 import server.MapleSquadType;
 import server.MapleStatEffect;
+import server.events.MapleEvent;
 import server.quest.MapleQuest;
 import tools.MaplePacketCreator;
 import tools.Pair;
@@ -271,6 +274,26 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
     public void setLevelz(int level) {
         getPlayer().setLevel(10);
     }
+    
+    public void setHp ( int hp ) {
+       getPlayer().setMaxHp(hp);
+       getPlayer().updateSingleStat(MapleStat.MAXHP, hp);
+    }
+
+    public void setMp ( int mp) {
+        getPlayer().setMaxMp(mp);
+        getPlayer().updateSingleStat(MapleStat.MAXMP, mp);
+    }
+
+    public void addAp ( int ap) {
+       getPlayer().setRemainingAp(ap);
+       getPlayer().updateSingleStat(MapleStat.AVAILABLEAP, getPlayer().getRemainingAp());
+    }
+
+    public void addSp (int sp){
+       getPlayer().setRemainingSp(sp);
+       getPlayer().updateSingleStat(MapleStat.AVAILABLESP, getPlayer().getRemainingSp());
+    }
 
     public void setLevelx(int level) {
         getPlayer().setLevel(8);
@@ -427,8 +450,17 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
             gainItem(5220000, (short) -1);
         }
         sendNext("You have obtained a #b#t" + itemid + "##k.");
-        //getClient().getChannelServer().broadcastPacket(MaplePacketCreator.gachaponMessage(getPlayer().getInventory(MapleInventoryType.getByType((byte) (itemid / 1000000))).findById(itemid), c.getPlayer().getMapName(gacMap[(getNpc() != 9100117 && getNpc() != 9100109) ? (getNpc() - 9100100) : getNpc() == 9100109 ? 8 : 9]), getPlayer()));
     }
+    
+    public MapleEvent getEvent() {
+        return c.getChannelServer().getEvent();
+    }  
+    
+    public void divideTeams() {
+        if (getEvent() != null) {
+            getPlayer().setTeam(getEvent().getLimit() % 2); //muhaha :D
+        }
+    }  
 
     public void disbandAlliance(MapleClient c, int allianceId) {
         PreparedStatement ps = null;
@@ -535,6 +567,22 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
             mc.changeMap(getWarpMap(id));
         }
     }
+    
+    public String getRecroNews() throws SQLException {
+    StringBuilder ret = new StringBuilder();
+        PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT title, message, date FROM recronews ORDER BY newsid desc LIMIT 5");
+        ResultSet rs = ps.executeQuery();
+            try {
+                while (rs.next()) {
+                    ret.append("\r\n#e").append(rs.getString("title")).append(" - (").append(rs.getString("date")).append(")#n\r\n").append(rs.getString("message")).append("\r\n");
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(NPCConversationManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         ps.close();
+         rs.close();
+    return ret.toString();
+}
 
     public void removeHiredMerchantItem(int id) {
         try {

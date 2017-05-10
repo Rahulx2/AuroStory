@@ -82,6 +82,16 @@ public final class TakeDamageHandler extends AbstractMaplePacketHandler {
                     }
                 }
             }
+             else if (damage > 0 && player.getMapId() == 240050101 || player.getMapId() == 240050102 || player.getMapId() == 240050103) {
+              for (MapleCharacter mch : player.getMap().getCharacters()) {
+                mch.dropMessage(6, "The quest have failed.");
+               mch.changeMap(240050000);
+               }
+            
+            } else if (damage > 0 && player.getMapId() == 240050310) {
+              player.setHp(50);
+              player.updateSingleStat(MapleStat.HP, 50);
+               }
             direction = slea.readByte();
         }
         if (damagefrom != -1 && damagefrom != -2 && attacker != null) {

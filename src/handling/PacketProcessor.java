@@ -137,6 +137,7 @@ import handling.channel.handler.MovePlayerHandler;
 import handling.channel.handler.TrockAddMapHandler;
 import handling.channel.handler.DamageSummonHandler;
 import handling.channel.handler.CancelItemEffectHandler;
+import handling.channel.handler.CoconutHandler;
 import handling.channel.handler.MTSHandler;
 import handling.channel.handler.TouchReactorHandler;
 import handling.channel.handler.TakeDamageHandler;
@@ -145,7 +146,9 @@ import handling.channel.handler.CouponCodeHandler;
 import handling.channel.handler.FamilyAddHandler;
 import handling.channel.handler.DistributeAPHandler;
 import handling.channel.handler.ItemSortHandler;
+import handling.channel.handler.LeftKnockbackHandler;
 import handling.channel.handler.MagicDamageHandler;
+import handling.channel.handler.SnowballHandler;
 import handling.handler.KeepAliveHandler;
 import handling.handler.LoginRequiringNoOpHandler;
 
@@ -212,6 +215,9 @@ public final class PacketProcessor {
             registerHandler(RecvPacketOpcode.DELETE_CHAR, new DeleteCharHandler());
             registerHandler(RecvPacketOpcode.VIEW_ALL_CHAR, new ViewCharHandler());
             registerHandler(RecvPacketOpcode.PICK_ALL_CHAR, new PickCharHandler());
+            registerHandler(RecvPacketOpcode.COCONUT, new CoconutHandler());  
+            registerHandler(RecvPacketOpcode.LEFT_KNOCKBACK, new LeftKnockbackHandler());
+            registerHandler(RecvPacketOpcode.SNOWBALL, new SnowballHandler());
             registerHandler(RecvPacketOpcode.REGISTER_PIN, new RegisterPinHandler());
             registerHandler(RecvPacketOpcode.GUEST_LOGIN, new GuestLoginHandler());
             registerHandler(RecvPacketOpcode.CLIENT_START, new ClientStartHandler());

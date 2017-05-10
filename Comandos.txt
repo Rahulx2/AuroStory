@@ -12,6 +12,7 @@ Comandos de Administrador:
 -!setgmlevel
 -!packet
 -!shutdown
+-!news
 -!shutdownnow
 -!zakum
 -!pinkbean
@@ -31,6 +32,7 @@ Comandos de GameMaster (GM):
 -!dispoNPCse
 -!bombmap
 -!bomb
+-!startrace
 -!speakall
 -!diseasemap - SEAL - DARKNESS - WEAKEN - STUN - POISON - SEDUCE
 -!mynpcpos
@@ -135,3 +137,5 @@ Comandos de Jugadores:
 -@shop - Opens up the basic shop.
 -@potshop - Opens up the potion shop.
 -@storage - Opens up your storage.
+-@joinrace - Entra a la carrera que haran un GM.
+-@rules - Las Reglas para competir en la carrera.

@@ -33,13 +33,19 @@ function start() {
 }
 
 function action(mode, type, selection) {
-    if (mode > 0)
+    if (mode > 0) {
         status++;
-    else
+    } else {
         cm.dispose();
-    if (status == 1)
-        cm.sendNext ("Alright, see you next time. Take care.");
-    else if (status == 2)
-        cm.warp(200000111, 0);// back to Orbis jetty
-    cm.dispose();
+    }
+    if (status == 1) {
+        cm.sendOk("Alright, see you next time. Take care.");
+    } else if (status == 2) {
+        if (cm.getPlayer().getMap().getId() == 101000301) {
+            cm.warp(101000300);
+        } else {
+            cm.warp(200000111);
+        }
+        cm.dispose();
+    }
 }

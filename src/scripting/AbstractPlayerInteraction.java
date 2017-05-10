@@ -159,6 +159,10 @@ public class AbstractPlayerInteraction {
             getGuild().guildMessage(MaplePacketCreator.serverNotice(type, message));
         }
     }
+    
+    public final void cancelItem(final int id) {
+        c.getPlayer().cancelEffect(MapleItemInformationProvider.getInstance().getItemEffect(id), false, -1);
+    }  
 
     public MapleGuild getGuild() {
         try {

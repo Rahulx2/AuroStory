@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package handling.channel.handler;
 
+import Config.Server;
 import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -45,6 +46,7 @@ import handling.mundo.PlayerBuffValueHolder;
 import handling.mundo.guild.MapleAlliance;
 import handling.mundo.guild.MapleGuild;
 import handling.mundo.remote.WorldChannelInterface;
+import scripting.npc.NPCScriptManager;
 import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -58,6 +60,11 @@ public final class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         int cid = slea.readInt();
         MapleCharacter player = null;
+        if (!c.messageOn()) { 
+             player.dropMessage(0,Server.INICIAR_MENSAJE); 
+             NPCScriptManager.getInstance().start(c, Server.INICIAR_NPC, null, null); 
+             c.setMessageToggle(1);  
+        }  
         try {
             player = MapleCharacter.loadCharFromDB(cid, c, true);
             c.announce(MaplePacketCreator.updateGender(player));

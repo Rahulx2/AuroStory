@@ -198,10 +198,10 @@ public enum SendPacketOpcode implements WritableIntValueHolder {
     REACTOR_HIT, //0xF7
     REACTOR_SPAWN, //0xF9
     REACTOR_DESTROY, //0xFA
-    ROLL_SNOWBALL, //0xFB
-    HIT_SNOWBALL, //0xFC
-    SNOWBALL_MESSAGE, //0xFD
-    LEFT_KNOCK_BACK, //0xFE
+    //ROLL_SNOWBALL, //0xFB
+    //HIT_SNOWBALL, //0xFC
+    //SNOWBALL_MESSAGE, //0xFD
+    //LEFT_KNOCK_BACK, //0xFE
     UNABLE_TO_CONNECT, //0x100
     MONSTER_CARNIVAL_START, //0x103
     MONSTER_CARNIVAL_OBTAINED_CP, //0x104
@@ -238,6 +238,13 @@ public enum SendPacketOpcode implements WritableIntValueHolder {
     ARAN_COMBO,
     REMOVE_KITE,
     SPAWN_KITE,
+    EARN_TITLE_MESSAGE,
+    HIT_COCONUT,
+    COCONUT_SCORE,
+    ROLL_SNOWBALL,
+    HIT_SNOWBALL,
+    SNOWBALL_MESSAGE,
+    LEFT_KNOCK_BACK,
     HIRED_MERCHANT_BOX; //0xE1
     private int code = -2;
 

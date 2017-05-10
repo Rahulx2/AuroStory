@@ -69,6 +69,12 @@ import server.MapleOxQuiz;
 import server.MapleSquad;
 import server.life.MapleLifeFactory;
 import java.util.concurrent.locks.ReentrantReadWriteLock; //better at deadlock prevention
+import server.events.MapleCoconut;
+//import server.events.MapleCoconut;
+import server.events.MapleCoconuts;
+import server.events.MapleFitness;
+import server.events.MapleOla;
+import server.events.MapleSnowball;
 
 public class MapleMap {
 
@@ -117,6 +123,18 @@ public class MapleMap {
     // HPQ
     private int riceCakeNum = 0; // bad place to put this
     int randhum = MapleCharacter.rand(1,5);
+    //Events MapleCoconut - Fitness - Ola Ola - SnowBall
+    private boolean eventstarted = false;
+    private List<MapleCoconuts> coconuts = new LinkedList<MapleCoconuts>();
+    private MapleCoconut coconut;
+    private boolean team;
+    private int coconutscore0 = 0;
+    private int coconutscore1 = 0;
+    private int countBombing = 80;
+    private int countFalling = 401;
+    private int countStopped = 20;
+    private MapleSnowball snowball0 = null;
+    private MapleSnowball snowball1 = null;
 
     public MapleMap(int mapid, int channel, int returnMapId, float monsterRate) {
         this.mapid = mapid;
@@ -484,6 +502,39 @@ public class MapleMap {
             objectlock.readLock().unlock();
         }
         return null;
+    }
+    
+    public void setSnowball(int team, MapleSnowball ball) {
+        switch (team) {
+            case 0:
+                this.snowball0 = ball;
+        break;
+            case 1:
+        this.snowball1 = ball;
+        break;
+            default:
+        break;
+        }
+    }
+
+    public MapleSnowball getSnowball(int team) {
+    switch (team) {
+            case 0:
+        return snowball0;
+            case 1:
+        return snowball1;
+            default:
+        return null;
+    }
+    }
+
+    public void warpOutByTeam(int team, int mapid) {
+        for (MapleCharacter chr : getCharacters()) {
+            if (chr != null) {
+                if (chr.getTeam() == team)
+                    chr.changeMap(mapid);
+            }
+        }
     }
 
     public int countMonster(int id) {
@@ -1120,6 +1171,142 @@ public class MapleMap {
             }
         }, duration);
     }
+    
+    public boolean getAndSwitchTeam() {
+        team = !team;
+        return team;
+    }
+
+    public MapleCoconuts getCoconut(int id) {
+        return coconuts.get(id);
+    }
+
+    public List<MapleCoconuts> getAllCoconuts() {
+        return coconuts;
+    }
+
+    public void setCoconutsHittable(boolean nut) {
+        for (MapleCoconuts nuts : getAllCoconuts()) {
+            nuts.setHittable(nut);
+        }
+    }
+
+    public int getBombings() {
+        return countBombing;
+    }
+
+    public void bombCoconut() {
+        countBombing--;
+    }
+
+    public int getFalling() {
+        return countFalling;
+    }
+
+    public void fallCoconut() {
+        countFalling--;
+    }
+
+    public int getStopped() {
+        return countStopped;
+    }
+
+    public void stopCoconut() {
+        countStopped--;
+    }
+
+    public int getMapleScore() { // Team Maple, coconut event
+        return coconutscore0;
+    }
+
+    public int getStoryScore() { // Team Story, coconut event
+        return coconutscore1;
+    }
+
+    public void addMapleScore() { // Team Maple, coconut event
+        coconutscore0++;
+    }
+
+    public void addStoryScore() { // Team Story, coconut event
+        coconutscore1++;
+    }
+
+    public void resetCoconutScore() {
+        coconutscore0 = 0;
+        coconutscore1 = 0;
+    }
+
+    public void setCoconut(MapleCoconut nut) {
+        this.coconut = nut;
+    }
+
+    public void startEvent(final MapleCharacter chr) {
+        if (this.mapid == 109080000) {
+        setCoconut(new MapleCoconut(this));
+        coconut.startEvent();
+        if (this.mapid == 109060000 && getSnowball(chr.getTeam()) == null) {
+            setSnowball(0, new MapleSnowball(0, this));
+            setSnowball(1, new MapleSnowball(1, this));
+            getSnowball(chr.getTeam()).startEvent();
+        }
+    
+
+    } else if (this.mapid == 109040000) {
+        chr.setFitness(new MapleFitness(chr));
+        chr.getFitness().startFitness();
+        
+    } else if (this.mapid == 109030001 || this.mapid == 109030101) {
+        chr.setOla(new MapleOla(chr));
+        chr.getOla().startOla();
+
+    } else if (this.mapid == 109020001) {
+        setOx(new MapleOxQuiz(this));
+        getOx().sendQuestion();
+        setOxQuiz(true);
+    }
+}
+
+    public boolean eventStarted() {
+        return eventstarted;
+    }
+    
+    public void startEvent() {
+        this.eventstarted = true;
+    }
+
+    public void setEventStarted(boolean event) {
+        this.eventstarted = event;
+    }
+
+    public String getEventNPC() {
+       if (mapid == 60000) {
+           return "Talk to Paul!";
+       } else if (mapid == 104000000) {
+           return "Talk to Jean!";
+       } else if (mapid == 200000000) {
+           return "Talk to Martin!";
+       } else if (mapid == 220000000) {
+           return "Talk to Tony!";
+       } else {
+        return null;
+       }
+    }
+
+    public boolean hasEventNPC() {
+        return this.mapid == 60000 || this.mapid == 104000000 || this.mapid == 200000000 || this.mapid == 220000000;
+    }
+
+    public boolean isStartingEventMap() {
+        return this.mapid == 109040000 || this.mapid == 109020001 || this.mapid == 109010000 || this.mapid == 109030001 || this.mapid == 109030101;
+    }
+
+    public boolean isEventMap() {
+        return this.mapid >= 109010000 && this.mapid < 109050000 || this.mapid > 109050001 && this.mapid <= 109090000;
+    }
+
+    private boolean hasCoconutEquip() {
+        return fieldType == 4;
+    }  
 
     public void disappearingItemDrop(final int dropperId, final Point dropperPosition, final MapleCharacter owner, final IItem item, Point pos) {
         final Point droppos = calcDropPos(pos, pos);
@@ -1235,6 +1422,23 @@ public class MapleMap {
                 MapScriptManager.getInstance().getMapScript(chr.getClient(), onFirstUserEnter, true);
             }
         }
+        if (mapid == 109060000)
+            chr.getClient().getSession().write(MaplePacketCreator.rollSnowBall(true, 0, null, null));
+        if (isStartingEventMap() && !eventStarted()) {
+                chr.getMap().getPortal("join00").setPortalStatus(false);
+            }
+            if (hasCoconutEquip()) {
+                chr.getClient().getSession().write(MaplePacketCreator.coconutScore(0, 0));
+                int lolwat = chr.getMap().getAndSwitchTeam() ? 0 : 1;
+                chr.setTeam(lolwat);
+                chr.getClient().getSession().write(MaplePacketCreator.showForcedEquip(lolwat));
+            }
+        if (chr.getFitness() != null && chr.getFitness().isTimerStarted()) {
+            chr.getClient().getSession().write(MaplePacketCreator.getClock((int) (chr.getFitness().getTimeLeft() / 1000)));
+        }
+        if (chr.getOla() != null && chr.getOla().isTimerStarted()) {
+            chr.getClient().getSession().write(MaplePacketCreator.getClock((int) (chr.getOla().getTimeLeft() / 1000)));
+        }  
         if (!onUserEnter.equals("")) {
             if (onUserEnter.equals("cygnusTest") && (mapid < 913040000 || mapid > 913040006)) {
                 chr.saveLocation("CYGNUSINTRO");
@@ -1329,6 +1533,26 @@ public class MapleMap {
             }
         }
         return closest;
+    }
+    
+    public void warpMap(MapleMap map) {
+        synchronized (characters) {
+            for (MapleCharacter chr : this.characters) {
+                if (chr.isAlive()) {
+                    chr.changeMap(map, map.getPortal(0));
+                } else {
+                    chr.changeMap(chr.getMap().getReturnMap(), map.getPortal(0));
+                }
+            }
+        }
+    }
+    
+    public void spawnMonsterOnGroundBelow(int mobid, int x, int y) {
+        MapleMonster mob = MapleLifeFactory.getMonster(mobid);
+        if (mob != null) {
+            Point point = new Point(x, y);
+            spawnMonsterOnGroundBelow(mob, point);
+        }
     }
 
     public MaplePortal getRandomSpawnpoint() {
@@ -1838,7 +2062,7 @@ public class MapleMap {
         this.protectItem = delta;
     }
 
-    private int hasBoat() {
+    public int hasBoat() {
         return docked ? 2 : (boat ? 1 : 0);
     }
 
@@ -1848,6 +2072,7 @@ public class MapleMap {
 
     public void setDocked(boolean isDocked) {
         this.docked = isDocked;
+        broadcastMessage(MaplePacketCreator.boatPacket(isDocked));
     }
 
     public void broadcastGMMessage(MapleCharacter source, MaplePacket packet, boolean repeatToSource) {

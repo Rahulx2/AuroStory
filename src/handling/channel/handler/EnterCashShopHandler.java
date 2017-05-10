@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package handling.channel.handler;
 
+import Config.Server;
 import java.rmi.RemoteException;
 import client.MapleClient;
 import handling.AbstractMaplePacketHandler;
@@ -34,6 +35,10 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class EnterCashShopHandler extends AbstractMaplePacketHandler {
 
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+        if (Server.CashShopEstado == false) {
+	c.getSession().write(MaplePacketCreator.serverNotice(1, "The cash shop is unavaiable. Please try again later."));
+	return;
+}
         if (!c.getPlayer().isAlive()) {
             c.getSession().write(MaplePacketCreator.enableActions());
             return;

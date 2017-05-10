@@ -28,10 +28,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map.Entry;
 import handling.channel.ChannelServer;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import tools.DatabaseConnection;
 import server.life.MapleMonster;
 import server.MapleOxQuiz;
 import server.MaplePortal;
+import server.events.MapleEvent;
 import server.life.MapleLifeFactory;
 import server.life.MapleNPC;
 import server.maps.MapleMap;
@@ -247,7 +250,80 @@ class Admin {
            victim.dropMessage(6, player.getName() + " has given you " + splitted[2] + " Event Points.");  
             } else if (splitted[0].equalsIgnoreCase("pinkbean")) {
             player.getMap().spawnMonsterOnGroudBelow(MapleLifeFactory.getMonster(8820001), player.getPosition());
-        } else if (splitted[0].equalsIgnoreCase("playernpc")) {
+        } else if (splitted[0].equalsIgnoreCase("startevent")) {
+            for (MapleCharacter chr : c.getPlayer().getMap().getCharacters()) {
+                 c.getPlayer().getMap().startEvent(chr);
+            }
+            c.getChannelServer().setEvent(null);
+        } else if (splitted[0].equalsIgnoreCase("scheduleevent")) {
+           if (c.getPlayer().getMap().hasEventNPC()) {
+            if (splitted[1].equals("treasure")) {
+                c.getChannelServer().setEvent(new MapleEvent(109010000, 50));
+            try {
+                cserv.getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(0, "Hello Scania let's play an event in " + player.getMap().getMapName() + " CH " + c.getChannel() + "! " + player.getMap().getEventNPC()).getBytes());
+            } catch (Exception e) {
+                cserv.reconnectWorld();
+            }
+            } else if (splitted[1].equals("ox")) {
+                c.getChannelServer().setEvent(new MapleEvent(109020001, 50));
+            try {
+                cserv.getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(0, "Hello Scania let's play an event in " + player.getMap().getMapName() + " CH " + c.getChannel() + "! " + player.getMap().getEventNPC()).getBytes());
+            } catch (Exception e) {
+                cserv.reconnectWorld();
+            }
+            } else if (splitted[1].equals("ola")) {
+                c.getChannelServer().setEvent(new MapleEvent(109030101, 50)); // Wrong map but still Ola Ola
+            try {
+                cserv.getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(0, "Hello Scania let's play an event in " + player.getMap().getMapName() + " CH " + c.getChannel() + "! " + player.getMap().getEventNPC()).getBytes());
+            } catch (Exception e) {
+                cserv.reconnectWorld();
+            }
+            } else if (splitted[1].equals("fitness")) {
+                c.getChannelServer().setEvent(new MapleEvent(109040000, 50));
+            try {
+                cserv.getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(0, "Hello Scania let's play an event in " + player.getMap().getMapName() + " CH " + c.getChannel() + "! " + player.getMap().getEventNPC()).getBytes());
+            } catch (Exception e) {
+                cserv.reconnectWorld();
+            }
+            } else if (splitted[1].equals("snowball")) {
+                c.getChannelServer().setEvent(new MapleEvent(109060001, 50));
+            try {
+                cserv.getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(0, "Hello Scania let's play an event in " + player.getMap().getMapName() + " CH " + c.getChannel() + "! " + player.getMap().getEventNPC()).getBytes());
+            } catch (Exception e) {
+                cserv.reconnectWorld();
+            }
+            } else if (splitted[1].equals("coconut")) {
+                c.getChannelServer().setEvent(new MapleEvent(109080000, 50));
+            try {
+                cserv.getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(0, "Hello Scania let's play an event in " + player.getMap().getMapName() + " CH " + c.getChannel() + "! " + player.getMap().getEventNPC()).getBytes());
+            } catch (Exception e) {
+                cserv.reconnectWorld();
+            }
+            } else {
+                player.message("Wrong Syntax: /scheduleevent treasure, ox, ola, fitness, snowball or coconut");
+            }
+           } else {
+               player.message("You can only use this command in the following maps: 60000, 104000000, 200000000, 220000000");
+           }
+        } else if (splitted[0].equalsIgnoreCase("warpsnowball")) {
+            for (MapleCharacter chr : player.getMap().getCharacters()) {
+                 chr.changeMap(109060000, chr.getTeam());
+            }
+            } else if (splitted[0].equalsIgnoreCase("news")) {
+                  String title = (splitted[1]);
+                  String message = StringUtil.joinStringFrom(splitted, 2);
+                try {
+                    java.sql.Connection con = DatabaseConnection.getConnection();
+                    PreparedStatement ps = con.prepareStatement("INSERT INTO recronews ( title, message, date ) VALUES ( ?, ?, ? )");
+                    ps.setString(1, title);
+                    ps.setString(2, message);
+                    ps.setString(3, now("dd/MM/yy"));
+                    ps.executeUpdate();
+                    ps.close();
+                } catch (SQLException e) {
+                    player.dropMessage("[Error] - Cannot save Recro news!");
+                }
+                } else if (splitted[0].equalsIgnoreCase("playernpc")) {
             player.playerNPC(c.getChannelServer().getPlayerStorage().getCharacterByName(splitted[1]), Integer.parseInt(splitted[2]));
         } else if (splitted[0].equalsIgnoreCase("reloadAllMaps")) {
             for (MapleMap map : c.getChannelServer().getMapFactory().getMaps().values()) {
@@ -331,5 +407,12 @@ class Admin {
         }
         return true;
     }
+
+        public static String now(String dateFormat) {
+                      Calendar cal = Calendar.getInstance();
+                      SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+               return sdf.format(cal.getTime());
+
+     }
 }
 

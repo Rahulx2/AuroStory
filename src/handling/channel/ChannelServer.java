@@ -75,6 +75,7 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.transport.socket.SocketSessionConfig;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import server.MapleSquad;
+import server.events.MapleEvent;
 import server.MapleSquadType;
 import server.maps.MapleMap;
 
@@ -107,6 +108,13 @@ public class ChannelServer implements Runnable {
     private HiredMerchantRegistry HMRegistry = new HiredMerchantRegistry(channel);
     public boolean eventOn = false;
     public int eventMap = 0;
+    //Island Race
+    private boolean hasWaitingStarted = false;
+    private boolean race = false;
+    private int competitors = 0;
+    private int waitingTime;
+    //Event
+    private MapleEvent event;
 
     private ChannelServer(String key) {
         mapFactory = new MapleMapFactory(MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Map.wz")), MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/String.wz")));
@@ -124,6 +132,12 @@ public class ChannelServer implements Runnable {
     public void addInstanceId() {
         instanceId++;
     }
+    
+    public void saveAll() {
+        for (MapleCharacter chr : players.getAllCharacters()) {
+            chr.saveToDB(true);
+        }
+    }  
 
     public void reconnectWorld() {
         reconnectWorld(false);
@@ -214,6 +228,14 @@ public class ChannelServer implements Runnable {
             e.printStackTrace();
         }
     }
+    
+    public MapleEvent getEvent() {
+        return event;
+    }
+
+    public void setEvent(MapleEvent event) {
+        this.event = event;
+    }  
 
     public void shutdown() {
         shutdown = true;
@@ -258,6 +280,71 @@ public class ChannelServer implements Runnable {
 
     public static ChannelServer getInstance(int channel) {
         return instances.get(channel);
+    }
+    
+    public int getWaitingTime() {
+       return waitingTime;
+    }
+
+    public void setWaitingTime(int set){
+        this.waitingTime = set;
+    }
+
+
+      public void raceCountdown() {
+        TimerManager.getInstance().schedule(new Runnable() {
+            public void run() {
+                if (getWaiting() && getWaitingTime() > 1) {
+                    setWaitingTime(getWaitingTime() - 1);
+                    if (getWaitingTime() > 1){
+                                            try {
+           getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(6, "[Event]: The Great Victoria Island Race will start in " + getWaitingTime() + " minutes! There are " + getCompetitors() + " players in the race.").getBytes());
+             } catch (RemoteException e) {
+               reconnectWorld();
+                 }
+                    } else {
+                   try {
+           getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(6, "[Event]: The Great Victoria Island Race will start in " + getWaitingTime() + " minute! There are " + getCompetitors() + " players in the race.").getBytes());
+             } catch (RemoteException e) {
+               reconnectWorld();
+                 }
+                    }
+                    raceCountdown();
+                } else if (getWaiting() && getWaitingTime() <= 1) {
+               setRace(true);
+                setWaiting(false);
+                 try {
+           getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(6, "[Event]: The Great Victoria Island Race has begun! Race all the way around Victoria Island going East, to win!").getBytes());
+             } catch (RemoteException c) {
+               reconnectWorld();
+                 }
+               }
+            }
+        }, 1 * 60 * 1000);
+    }
+
+    public boolean getRace() {
+       return race;
+    }
+
+    public void setRace(boolean set){
+        this.race = set;
+    }
+
+    public boolean getWaiting() {
+       return hasWaitingStarted;
+    }
+
+    public void setWaiting(boolean set){
+        this.hasWaitingStarted = set;
+    }
+
+        public int getCompetitors() {
+       return competitors;
+    }
+
+    public void setCompetitors(int set){
+        this.competitors = set;
     }
 
     public void addPlayer(MapleCharacter chr) {
